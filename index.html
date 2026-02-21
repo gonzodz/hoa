@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cẩm Nang Hóa Học 2025 - 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            startup: { typeset: true }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* Tối ưu bảng cho mobile */
+        .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800">
+
+    <header class="bg-white border-b sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">H</div>
+                <h1 class="text-xl font-bold tracking-tight">Hóa Học THPT 2026</h1>
+            </div>
+            <nav class="flex flex-wrap justify-center gap-1 bg-slate-100 p-1 rounded-xl">
+                <button onclick="switchTab('tab1')" id="btn-tab1" class="nav-btn px-4 py-2 text-sm font-semibold rounded-lg bg-indigo-600 text-white shadow">Đại Cương</button>
+                <button onclick="switchTab('tab2')" id="btn-tab2" class="nav-btn px-4 py-2 text-sm font-semibold rounded-lg text-slate-600">Hữu Cơ</button>
+                <button onclick="switchTab('tab3')" id="btn-tab3" class="nav-btn px-4 py-2 text-sm font-semibold rounded-lg text-slate-600">Vô Cơ</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <section id="tab1" class="tab-content active space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h2 class="text-lg font-bold text-indigo-700 mb-4 border-l-4 border-indigo-600 pl-3">Tính toán nhanh</h2>
+                    <div class="space-y-4">
+                        <div class="bg-indigo-50 p-4 rounded-xl">
+                            <label class="block text-xs font-bold text-indigo-600 uppercase mb-1">Tính pH</label>
+                            <input type="number" id="ph-input" placeholder="Nồng độ [H+]" class="w-full p-2 border rounded-md outline-none focus:ring-2 ring-indigo-300">
+                            <button onclick="calculatePH()" class="w-full mt-2 bg-indigo-600 text-white py-2 rounded-md font-bold text-sm">Kết quả</button>
+                            <p id="ph-result" class="mt-2 text-center font-bold text-indigo-800"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-indigo-900 text-white p-6 rounded-2xl shadow-lg">
+                    <h2 class="text-lg font-bold mb-3 italic">Công thức nền tảng</h2>
+                    <p class="text-sm opacity-80 mb-4">Áp dụng cho các bài toán bảo toàn electron và điện phân.</p>
+                    <div class="bg-white/10 p-4 rounded-lg text-center">
+                        $$m = \frac{A \cdot I \cdot t}{n \cdot 96500}$$
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab2" class="tab-content space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <h2 class="text-lg font-bold text-rose-600 mb-4">Dữ liệu phổ hồng ngoại IR</h2>
+                <div class="table-scroll">
+                    <table class="w-full text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-left border-b">
+                                <th class="p-3">Nhóm chức</th>
+                                <th class="p-3">Liên kết</th>
+                                <th class="p-3">Số sóng (cm⁻¹)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y">
+                            <tr><td class="p-3 font-semibold">Alcohol</td><td class="p-3">O-H</td><td class="p-3 text-rose-600">3200–3600 (rộng)</td></tr>
+                            <tr><td class="p-3 font-semibold">Aldehyde</td><td class="p-3">C=O</td><td class="p-3 text-rose-600">1670–1740 (nhọn)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <h3 class="font-bold text-center mb-4">Tương quan số nguyên tử C và đồng phân</h3>
+                <div class="h-[300px]">
+                    <canvas id="organicChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab3" class="tab-content space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-2xl border border-purple-200 shadow-sm">
+                    <h2 class="text-xl font-bold text-purple-700 mb-4">Phức Chất (Complexes)</h2>
+                    <p class="text-sm text-slate-600 mb-4">Ion trung tâm liên kết với các phối tử.</p>
+                    <div class="space-y-3">
+                        <div class="p-3 bg-blue-50 border-l-4 border-blue-500 rounded">
+                            <span class="font-bold">$[Cu(NH_3)_4]^{2+}$</span>: Xanh thẫm
+                        </div>
+                        <div class="p-3 bg-purple-50 border-l-4 border-purple-500 rounded">
+                            <span class="font-bold">$[Fe(SCN)]^{2+}$</span>: Đỏ máu
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="mt-auto py-6 bg-slate-800 text-white text-center text-xs">
+        <p>© 2026 - Cẩm nang ôn thi Hóa học THPT</p>
+    </footer>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => {
+                b.classList.remove('bg-indigo-600', 'text-white', 'shadow');
+                b.classList.add('text-slate-600');
+            });
+            
+            document.getElementById(tabId).classList.add('active');
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow');
+            activeBtn.classList.remove('text-slate-600');
+
+            if (window.MathJax) MathJax.typesetPromise();
+        }
+
+        function calculatePH() {
+            const h = document.getElementById('ph-input').value;
+            const res = document.getElementById('ph-result');
+            if (h > 0) {
+                const ph = -Math.log10(h);
+                res.innerText = "pH = " + ph.toFixed(2);
+            } else {
+                res.innerText = "Vui lòng nhập số > 0";
+            }
+        }
+
+        // Biểu đồ
+        const ctx = document.getElementById('organicChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['C1', 'C2', 'C3', 'C4'],
+                datasets: [{
+                    label: 'Số đồng phân Ester',
+                    data: [0, 1, 2, 4],
+                    backgroundColor: '#4f46e5'
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    </script>
+</body>
+</html>
