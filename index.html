@@ -3,611 +3,926 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cẩm Nang Ôn Thi Tốt Nghiệp THPT 2025-2026 - Môn Hóa Học</title>
+    <title>Hệ Thống Ôn Thi Vật Lý THPT 2025 - 2026</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js for Data Visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
-    <!-- Cấu hình và tải MathJax để hiển thị công thức Toán/Hóa -->
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- MathJax for rendering LaTeX formulas -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script>
         window.MathJax = {
             tex: {
                 inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']],
-                processEscapes: true,
-                tags: 'ams'
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
             },
             startup: {
-                typeset: true
+                pageReady: () => {
+                    return MathJax.startup.defaultPageReady().then(() => {
+                        document.getElementById('loading-math').style.display = 'none';
+                        document.getElementById('app-content').classList.remove('opacity-0');
+                    });
+                }
             }
         };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F8FAFC; /* Nền sáng, dịu mắt */
-            color: #1E293B;
+    <!-- Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e3a8a', // blue-900
+                        secondary: '#3b82f6', // blue-500
+                        accent: '#f59e0b', // amber-500
+                        bglight: '#f8fafc', // slate-50
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    }
+                }
+            }
         }
+    </script>
 
+    <style>
+        /* Base styles */
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #334155; }
+        h1, h2, h3, h4 { font-family: 'Merriweather', serif; }
+        
+        /* Smooth scrolling */
+        html { scroll-behavior: smooth; }
+        
+        /* Custom scrollbar for sidebar */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Chart Container Requirements */
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 600px;
+            max-width: 700px;
             margin-left: auto;
             margin-right: auto;
-            height: 320px;
+            height: 350px;
             max-height: 400px;
         }
-
-        /* Scrollbar tùy chỉnh */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9; 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1; 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8; 
+        @media (max-width: 768px) {
+            .chart-container { height: 280px; }
         }
 
-        /* Hiệu ứng thẻ (Card hover) */
-        .hover-card {
-            transition: all 0.2s ease-in-out;
+        /* Formula box styling */
+        .formula-box {
+            background-color: #ffffff;
+            border-left: 4px solid #3b82f6;
+            padding: 1.25rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .hover-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        .formula-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .theory-box {
+            background-color: #f0fdf4; /* green-50 */
+            border: 1px solid #bbf7d0; /* green-200 */
+            border-radius: 0.5rem;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
         }
 
-        /* Định dạng bảng đẹp */
-        .custom-table th {
-            background-color: #f1f5f9;
-            font-weight: 600;
-            color: #334155;
-            text-align: left;
-        }
-        .custom-table td, .custom-table th {
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        .custom-table tr:last-child td {
-            border-bottom: none;
-        }
+        .mjx-chtml { font-size: 110% !important; } /* Make math slightly larger */
     </style>
-    <!-- 
-         Application Structure Plan:
-         - Dashboard Structure with 4 main Tabs for 2018 Curriculum context.
-         - Tab 1: Đại cương & Hóa lý (General & Physical) - Includes Kinetics, Equilibrium, pH, Faraday, Conservation laws.
-         - Tab 2: Hóa Hữu cơ (Organic) - Includes Functional groups, new IUPAC names, IR Spectroscopy table, Isomer logic.
-         - Tab 3: Hóa Vô cơ & Phức chất (Inorganic & Complexes) - Deep dive into Electrochemistry and the newly emphasized Complex Compounds.
-         - Interaction: Dynamic rendering of MathJax when tabs switch or data filters to ensure no raw LaTeX is exposed.
-    -->
-    <!-- CONFIRMATION: NO SVG, NO Mermaid. Using MathJax for math, Chart.js for data, Tailwind for UI. -->
-</head>
-<body class="min-h-screen flex flex-col">
 
-    <!-- Header -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
-        <div class="container mx-auto px-4 py-3 flex flex-col lg:flex-row justify-between items-center gap-4">
-            <div class="flex items-center space-x-3 w-full lg:w-auto">
-                <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-inner">H</div>
-                <div>
-                    <h1 class="text-xl font-bold text-slate-800 tracking-tight">Cẩm Nang Hóa THPT</h1>
-                    <p class="text-xs text-indigo-600 font-semibold bg-indigo-50 px-2 py-0.5 rounded inline-block mt-0.5">GDPT 2018 • Thi 2025-2026</p>
-                </div>
+    <!-- Chosen Palette: Academic Slate & Blue 
+         - Primary: Deep Blue (#1e3a8a) for headers and navigation to signify academic rigor.
+         - Secondary: Bright Blue (#3b82f6) for interactive elements and accents.
+         - Background: Light Slate (#f8fafc) for high contrast and reading comfort.
+         - Theory Highlights: Soft Green (#f0fdf4) to separate text from formulas.
+    -->
+
+    <!-- Application Structure Plan:
+         - Layout: Dashboard style with a fixed left sidebar for navigation and a main scrollable content area. This allows users to quickly jump between topics without losing context.
+         - Content Organization: Grouped by Grade (12 then 11), then by Chapter. 
+         - Pedagogy Flow inside each section: 
+            1. Title & Intro.
+            2. Theory Block (newly added content: definitions, concepts).
+            3. Formula Block (from source report).
+            4. Interactive Visualization (where applicable) to solidify the theory.
+    -->
+
+    <!-- Visualization & Content Choices:
+         - Goal: Inform & Teach.
+         - Thermal Physics: Heating Curve (Chart.js Line) -> Shows temperature plateaus during phase changes (fusion/vaporization), visualizes Q=mcDt vs Q=Lm.
+         - Ideal Gas: Isotherm Curves (Chart.js Line with Slider) -> Interactively demonstrates Boyle's Law (P vs V) at different temperatures.
+         - Nuclear Physics: Radioactive Decay Curve (Chart.js Line) -> Visualizes exponential decay over time, showing the concept of half-life.
+         - Oscillation: Kinematics Graph (Chart.js Line) -> Shows the sinusoidal nature of displacement x(t).
+         - All visualizations use vanilla JS and Chart.js wrapped in responsive `.chart-container` divs. NO SVG/Mermaid used. Icons are FontAwesome (HTML).
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="flex h-screen overflow-hidden text-slate-700 bg-bglight">
+
+    <!-- Loading Screen for MathJax -->
+    <div id="loading-math" class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-white">
+        <i class="fas fa-atom fa-spin text-4xl text-blue-600 mb-4"></i>
+        <p class="text-lg font-medium text-slate-600">Đang tải công thức Vật lý...</p>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-72 bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 z-40 absolute md:relative h-full -translate-x-full md:translate-x-0" id="sidebar">
+        <div class="p-6 bg-primary text-white flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold"><i class="fas fa-graduation-cap mr-2"></i>Vật Lý THPT</h1>
+                <p class="text-blue-200 text-xs mt-1">Hệ thống Ôn thi 2025-2026</p>
             </div>
-            
-            <nav class="flex space-x-1 bg-slate-100 p-1.5 rounded-lg overflow-x-auto w-full lg:w-auto">
-                <button onclick="switchTab('physical')" id="btn-physical" class="tab-btn px-4 py-2 text-sm font-semibold rounded-md transition-all whitespace-nowrap bg-indigo-600 text-white shadow">Đại cương & Hóa lý</button>
-                <button onclick="switchTab('organic')" id="btn-organic" class="tab-btn px-4 py-2 text-sm font-semibold rounded-md transition-all whitespace-nowrap text-slate-600 hover:text-indigo-700 hover:bg-white">Hữu cơ & Phổ IR</button>
-                <button onclick="switchTab('inorganic')" id="btn-inorganic" class="tab-btn px-4 py-2 text-sm font-semibold rounded-md transition-all whitespace-nowrap text-slate-600 hover:text-indigo-700 hover:bg-white">Vô cơ & Phức chất</button>
-            </nav>
+            <button class="md:hidden text-white hover:text-blue-200" onclick="toggleSidebar()">
+                <i class="fas fa-times text-xl"></i>
+            </button>
         </div>
-    </header>
+        
+        <div class="flex-1 overflow-y-auto custom-scrollbar p-4">
+            <!-- Lớp 12 -->
+            <div class="mb-6">
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-2">Phần I: Lớp 12 (Trọng tâm)</h2>
+                <nav class="space-y-1">
+                    <a href="#chuong-1-nhiet" onclick="closeSidebarOnMobile()" class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-blue-50 hover:text-blue-700 group transition-colors">
+                        <i class="fas fa-fire-flame-curved w-6 text-orange-500 group-hover:text-orange-600"></i>
+                        1. Vật lí nhiệt
+                    </a>
+                    <a href="#chuong-2-khi" onclick="closeSidebarOnMobile()" class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-blue-50 hover:text-blue-700 group transition-colors">
+                        <i class="fas fa-wind w-6 text-sky-500 group-hover:text-sky-600"></i>
+                        2. Khí lí tưởng
+                    </a>
+                    <a href="#chuong-3-tu-truong" onclick="closeSidebarOnMobile()" class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-blue-50 hover:text-blue-700 group transition-colors">
+                        <i class="fas fa-magnet w-6 text-red-500 group-hover:text-red-600"></i>
+                        3. Từ trường
+                    </a>
+                    <a href="#chuong-4-hat-nhan" onclick="closeSidebarOnMobile()" class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-blue-50 hover:text-blue-700 group transition-colors">
+                        <i class="fas fa-atom w-6 text-yellow-500 group-hover:text-yellow-600"></i>
+                        4. Vật lí hạt nhân
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Lớp 11 -->
+            <div>
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-2">Phần II: Lớp 11 (Cơ bản)</h2>
+                <nav class="space-y-1">
+                    <a href="#chuong-1-dao-dong" onclick="closeSidebarOnMobile()" class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-blue-50 hover:text-blue-700 group transition-colors">
+                        <i class="fas fa-arrows-left-right-to-line w-6 text-indigo-500 group-hover:text-indigo-600"></i>
+                        1. Dao động cơ
+                    </a>
+                    <a href="#chuong-2-song" onclick="closeSidebarOnMobile()" class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-blue-50 hover:text-blue-700 group transition-colors">
+                        <i class="fas fa-water w-6 text-teal-500 group-hover:text-teal-600"></i>
+                        2. Sóng cơ học
+                    </a>
+                    <a href="#chuong-3-dien-xoay-chieu" onclick="closeSidebarOnMobile()" class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-600 hover:bg-blue-50 hover:text-blue-700 group transition-colors">
+                        <i class="fas fa-bolt w-6 text-yellow-400 group-hover:text-yellow-500"></i>
+                        3. Điện xoay chiều
+                    </a>
+                </nav>
+            </div>
+        </div>
+        
+        <div class="p-4 border-t border-slate-200">
+            <div class="bg-blue-50 rounded-lg p-3 text-xs text-blue-800">
+                <i class="fas fa-info-circle mr-1"></i> Nội dung tuân thủ chương trình GDPT 2018 mới nhất.
+            </div>
+        </div>
+    </aside>
+
+    <!-- Overlay for mobile sidebar -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-slate-800/50 z-30 hidden md:hidden" onclick="toggleSidebar()"></div>
 
     <!-- Main Content Area -->
-    <main class="flex-grow container mx-auto px-4 py-8">
+    <main class="flex-1 flex flex-col h-full overflow-hidden bg-bglight opacity-0 transition-opacity duration-500" id="app-content">
+        
+        <!-- Mobile Header -->
+        <header class="md:hidden bg-white shadow-sm border-b border-slate-200 flex items-center justify-between p-4 z-20">
+            <div class="font-bold text-primary flex items-center">
+                <i class="fas fa-graduation-cap mr-2"></i> Ôn Thi Vật Lý
+            </div>
+            <button onclick="toggleSidebar()" class="text-slate-500 hover:text-primary focus:outline-none">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </header>
 
-        <!-- INTRO BLOCK -->
-        <div class="mb-8 p-6 bg-gradient-to-br from-indigo-50 to-blue-50 border border-indigo-100 rounded-2xl shadow-sm">
-            <h2 class="text-lg font-bold text-indigo-900 mb-2">🎓 Sẵn sàng cho kỳ thi THPT 2025 - 2026</h2>
-            <p class="text-slate-700 text-sm md:text-base leading-relaxed">
-                Tài liệu này đã được **chuẩn hóa theo Danh pháp IUPAC** (như Sodium thay vì Natri, Alcohol thay vì Ancol) và bổ sung các kiến thức trọng tâm mới: **Phổ hồng ngoại (IR)**, **Động hóa học**, và **Phức chất**. Các công thức được tính toán tương tác trực tiếp bên dưới.
-            </p>
-        </div>
-
-        <!-- ================= SECTION 1: PHYSICAL & GENERAL CHEMISTRY ================= -->
-        <section id="tab-physical" class="tab-content animate-fade-in space-y-10">
+        <!-- Scrollable Content -->
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 lg:p-12" id="main-scroll-area">
             
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Định luật bảo toàn -->
-                <div>
-                    <h2 class="text-2xl font-bold text-slate-800 mb-5 border-l-4 border-indigo-500 pl-3">Định Luật Bảo Toàn Nền Tảng</h2>
-                    <div class="space-y-4">
-                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover-card">
-                            <h3 class="font-bold text-indigo-700 mb-2">1. Bảo toàn khối lượng</h3>
-                            <div class="bg-slate-50 p-3 rounded font-medium text-slate-800 mb-2 overflow-x-auto">
-                                $$\sum m_{\text{tham gia}} = \sum m_{\text{tạo thành}}$$
-                            </div>
-                            <p class="text-xs text-slate-500">Ứng dụng: Bài toán phản ứng thủy phân ester, peptide, nhiệt nhôm, cộng H₂, Br₂.</p>
+            <div class="max-w-5xl mx-auto">
+                <!-- Hero Section -->
+                <div class="bg-gradient-to-br from-primary to-blue-700 rounded-2xl p-8 text-white shadow-xl mb-12">
+                    <h1 class="text-3xl md:text-4xl font-bold mb-4 font-serif leading-tight">Cẩm Nang Lý Thuyết & Công Thức Vật Lý THPT</h1>
+                    <p class="text-blue-100 text-lg mb-6 max-w-2xl">
+                        Tài liệu tổng hợp toàn diện kiến thức lý thuyết và công thức trọng tâm cho kỳ thi Tốt nghiệp THPT 2025-2026. Bao gồm các tương tác trực quan giúp bạn nắm bắt bản chất vật lý một cách dễ dàng.
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="bg-white/20 px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm"><i class="fas fa-book mr-2"></i>Lý thuyết chuẩn SGK</span>
+                        <span class="bg-white/20 px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm"><i class="fas fa-calculator mr-2"></i>Công thức đầy đủ</span>
+                        <span class="bg-white/20 px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm"><i class="fas fa-chart-pie mr-2"></i>Đồ thị tương tác</span>
+                    </div>
+                </div>
+
+                <!-- ========================================== -->
+                <!-- PHẦN 1: LỚP 12 -->
+                <!-- ========================================== -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-bold text-slate-800 border-b-4 border-accent inline-block pb-2 mb-8">Phần I: Kiến thức Lớp 12 (Trọng tâm)</h2>
+                    
+                    <!-- Chương 1: Vật lí nhiệt -->
+                    <section id="chuong-1-nhiet" class="mb-16 scroll-mt-6">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="bg-orange-100 text-orange-600 p-3 rounded-lg"><i class="fas fa-fire-flame-curved text-2xl"></i></div>
+                            <h3 class="text-2xl font-bold text-slate-800">Chương 1: Vật lí nhiệt</h3>
                         </div>
                         
-                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover-card">
-                            <h3 class="font-bold text-indigo-700 mb-2">2. Bảo toàn electron (Oxi hóa - Khử)</h3>
-                            <div class="bg-slate-50 p-3 rounded font-medium text-slate-800 mb-2 overflow-x-auto">
-                                $$\sum n_{e \text{ nhường}} = \sum n_{e \text{ nhận}}$$
-                            </div>
-                            <p class="text-xs text-slate-600 mb-1">Ví dụ kinh điển (Kim loại + HNO₃):</p>
-                            <div class="text-sm bg-indigo-50 p-2 rounded text-indigo-900 overflow-x-auto">
-                                $$3n_{\text{Al}} + 2n_{\text{Mg}} = 3n_{\text{NO}} + 1n_{\text{NO}_2} + 8n_{\text{N}_2\text{O}} + 10n_{\text{N}_2} + 8n_{\text{NH}_4^+}$$
-                            </div>
-                        </div>
+                        <p class="text-slate-600 mb-6 italic">Chương này nghiên cứu về cấu trúc vật chất, nhiệt năng, sự truyền nhiệt, các trạng thái và các nguyên lý nhiệt động lực học.</p>
 
-                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover-card">
-                            <h3 class="font-bold text-indigo-700 mb-2">3. Bảo toàn điện tích (Dung dịch)</h3>
-                            <div class="bg-slate-50 p-3 rounded font-medium text-slate-800 overflow-x-auto">
-                                $$\sum (n_{\text{cation}} \times z_{\text{cation}}) = \sum (n_{\text{anion}} \times z_{\text{anion}})$$
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Động học, Cân bằng, Điện phân -->
-                <div class="space-y-6">
-                    <h2 class="text-2xl font-bold text-slate-800 mb-5 border-l-4 border-amber-500 pl-3">Động Học & Công Cụ Tính (Mới)</h2>
-
-                    <!-- Kinetics & Equilibrium -->
-                    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                        <h3 class="font-bold text-lg text-slate-800 mb-2">⚖️ Cân Bằng Hóa Học ($K_c$)</h3>
-                        <p class="text-sm text-slate-600 mb-2">Cho phản ứng: $aA + bB \rightleftharpoons cC + dD$</p>
-                        <div class="bg-slate-50 p-3 rounded overflow-x-auto mb-3">
-                            $$K_c = \frac{[C]^c [D]^d}{[A]^a [B]^b}$$
-                        </div>
-                        <p class="text-xs text-slate-500">Nguyên lý Le Chatelier: Khi thay đổi nồng độ, nhiệt độ, áp suất, hệ sẽ chuyển dịch về phía làm giảm tác động đó.</p>
-                    </div>
-
-                    <!-- Tools -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Faraday -->
-                        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-                            <h3 class="font-bold text-slate-800 mb-2">⚡ Điện Phân (Faraday)</h3>
-                            <p class="text-xs text-slate-500 mb-3">$m = \frac{A \cdot I \cdot t}{n \cdot 96500}$</p>
-                            <div class="space-y-2 mb-3">
-                                <input type="number" id="inp-A" placeholder="A (Khối lượng mol)" class="w-full border p-1.5 rounded text-sm outline-none focus:border-indigo-500">
-                                <input type="number" id="inp-n" placeholder="n (e trao đổi)" class="w-full border p-1.5 rounded text-sm outline-none focus:border-indigo-500">
-                                <input type="number" id="inp-I" placeholder="I (Ampe)" class="w-full border p-1.5 rounded text-sm outline-none focus:border-indigo-500">
-                                <input type="number" id="inp-t" placeholder="t (Giây)" class="w-full border p-1.5 rounded text-sm outline-none focus:border-indigo-500">
-                            </div>
-                            <button onclick="calcFaraday()" class="w-full bg-amber-500 text-white font-semibold py-1.5 rounded hover:bg-amber-600 transition text-sm">Tính Khối lượng</button>
-                            <div id="res-faraday" class="mt-2 text-center font-bold text-amber-700 text-sm hidden"></div>
-                        </div>
-
-                        <!-- pH -->
-                        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col">
-                            <h3 class="font-bold text-slate-800 mb-2">💧 Tính pH</h3>
-                            <p class="text-xs text-slate-500 mb-3">$pH = -\log[H^+]$</p>
-                            <input type="number" id="inp-h-conc" placeholder="Nồng độ [H+] (VD: 0.001)" step="0.0001" class="w-full border p-1.5 rounded text-sm outline-none focus:border-indigo-500 mb-3">
-                            <button onclick="calcPH()" class="w-full bg-blue-500 text-white font-semibold py-1.5 rounded hover:bg-blue-600 transition text-sm mt-auto">Tính kết quả</button>
-                            <div id="res-ph" class="mt-2 text-center font-bold text-blue-700 text-sm hidden"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= SECTION 2: ORGANIC CHEMISTRY ================= -->
-        <section id="tab-organic" class="tab-content hidden animate-fade-in space-y-10">
-            
-            <!-- IR Spectroscopy (New 2018 Curriculum) -->
-            <div>
-                <h2 class="text-2xl font-bold text-slate-800 mb-4 border-l-4 border-rose-500 pl-3">Phổ Hồng Ngoại (IR Spectroscopy)</h2>
-                <p class="text-slate-600 mb-4 text-sm">Công cụ cực kỳ quan trọng trong chương trình mới để xác định nhóm chức. Ghi nhớ các số sóng (Wavenumber $\nu$, $cm^{-1}$) đặc trưng sau:</p>
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
-                    <table class="w-full text-sm custom-table">
-                        <thead>
-                            <tr>
-                                <th>Nhóm chức</th>
-                                <th>Liên kết</th>
-                                <th>Số sóng đặc trưng ($cm^{-1}$)</th>
-                                <th>Cường độ / Hình dạng tín hiệu</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="font-bold text-slate-700">Alcohol / Phenol</td>
-                                <td>O-H</td>
-                                <td class="font-mono">3200 - 3600</td>
-                                <td class="text-rose-600 font-medium">Rất rộng (Broad), mạnh. (Đặc trưng nhất)</td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold text-slate-700">Carboxylic Acid</td>
-                                <td>O-H (liên kết H)</td>
-                                <td class="font-mono">2500 - 3300</td>
-                                <td>Rất rộng, che lấp vùng C-H.</td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold text-slate-700">Aldehyde, Ketone, Ester, Acid</td>
-                                <td>C=O (Carbonyl)</td>
-                                <td class="font-mono">1670 - 1740</td>
-                                <td class="text-rose-600 font-medium">Rất mạnh, hẹp (Sharp). Tín hiệu nhọn hoắt.</td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold text-slate-700">Amine (Bậc 1, 2)</td>
-                                <td>N-H</td>
-                                <td class="font-mono">3300 - 3500</td>
-                                <td>Trung bình. Amine bậc 1 có 2 mũi nhọn (tín hiệu kép).</td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold text-slate-700">Alkene / Arene</td>
-                                <td>C=C</td>
-                                <td class="font-mono">1600 - 1680</td>
-                                <td>Mạnh đến trung bình.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Organic Compounds Cards -->
-            <div>
-                <div class="flex flex-col md:flex-row md:items-end justify-between mb-4 gap-4">
-                    <div>
-                        <h2 class="text-2xl font-bold text-slate-800 border-l-4 border-teal-500 pl-3">Hệ Thống Hợp Chất Hữu Cơ (IUPAC)</h2>
-                        <p class="text-slate-600 mt-1 text-sm">Nhấn vào các nhóm để lọc nội dung.</p>
-                    </div>
-                    <!-- Filters -->
-                    <div class="flex flex-wrap gap-2">
-                        <button onclick="filterOrganic('all', this)" class="org-filter-btn px-3 py-1 bg-teal-600 text-white rounded-full text-sm font-semibold shadow-sm transition">Tất cả</button>
-                        <button onclick="filterOrganic('hydrocarbon', this)" class="org-filter-btn px-3 py-1 bg-white border border-slate-300 text-slate-600 rounded-full text-sm hover:bg-slate-50 transition">Hydrocarbon</button>
-                        <button onclick="filterOrganic('oxygen', this)" class="org-filter-btn px-3 py-1 bg-white border border-slate-300 text-slate-600 rounded-full text-sm hover:bg-slate-50 transition">Dẫn xuất Oxy</button>
-                        <button onclick="filterOrganic('nitrogen', this)" class="org-filter-btn px-3 py-1 bg-white border border-slate-300 text-slate-600 rounded-full text-sm hover:bg-slate-50 transition">Amino & Polyme</button>
-                    </div>
-                </div>
-
-                <div id="organic-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Cards injected by JS -->
-                </div>
-            </div>
-            
-            <!-- Chart for Isomers -->
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                <h3 class="font-bold text-slate-800 mb-4">Biểu đồ sự gia tăng Đồng phân (Isomers)</h3>
-                <div class="flex flex-col md:flex-row gap-6 items-center">
-                    <div class="w-full md:w-1/3 space-y-3">
-                        <p class="text-sm text-slate-600">Số lượng đồng phân tăng rất nhanh theo cấp số nhân khi số nguyên tử Carbon ($n$) tăng.</p>
-                        <div class="p-3 bg-teal-50 rounded border border-teal-100">
-                            <span class="font-semibold text-teal-800 text-sm block">Ester no, đơn, hở</span>
-                            <span class="text-teal-900">$2^{n-2}$ ($2 \le n < 5$)</span>
-                        </div>
-                        <div class="p-3 bg-rose-50 rounded border border-rose-100">
-                            <span class="font-semibold text-rose-800 text-sm block">Amine no, đơn, hở</span>
-                            <span class="text-rose-900">$2^{n-1}$ ($n < 5$)</span>
-                        </div>
-                        <div class="p-3 bg-indigo-50 rounded border border-indigo-100">
-                            <span class="font-semibold text-indigo-800 text-sm block">Amino Acid (1 NH₂, 1 COOH)</span>
-                            <span class="text-indigo-900">$2^{n-1} - n$ ($n \le 4$)</span>
-                        </div>
-                    </div>
-                    <div class="w-full md:w-2/3">
-                        <div class="chart-container">
-                            <canvas id="isomerChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= SECTION 3: INORGANIC CHEMISTRY & COMPLEXES ================= -->
-        <section id="tab-inorganic" class="tab-content hidden animate-fade-in space-y-10">
-            
-            <!-- Electrochemical Series -->
-            <div>
-                <h2 class="text-2xl font-bold text-slate-800 mb-4 border-l-4 border-blue-500 pl-3">Dãy Điện Hóa Kim Loại</h2>
-                <p class="text-slate-600 mb-4 text-sm">Chiều phản ứng Oxi hóa - khử (Quy tắc $\alpha$): **Chất OXH mạnh + Chất Khử mạnh $\rightarrow$ Chất OXH yếu hơn + Chất Khử yếu hơn**.</p>
-                
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
-                    <div class="flex space-x-2 min-w-max pb-4 items-center" id="electro-series">
-                        <!-- Injected by JS -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Phức chất (Mới cực kỳ quan trọng) -->
-                <div>
-                    <h2 class="text-2xl font-bold text-slate-800 mb-4 border-l-4 border-purple-500 pl-3">Phức Chất (Complex Compounds)</h2>
-                    <p class="text-slate-600 mb-4 text-sm">Nội dung cốt lõi của GDPT 2018. Phức chất gồm **Nguyên tử/Ion trung tâm** (thường là KL chuyển tiếp) liên kết cho-nhận với **Phối tử (Ligand)**.</p>
-                    
-                    <div class="space-y-4">
-                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover-card">
-                            <div class="flex items-center justify-between mb-2">
-                                <h4 class="font-bold text-purple-800 text-lg">$[Cu(H_2O)_6]^{2+}$</h4>
-                                <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-semibold">Xanh lam (Blue)</span>
-                            </div>
-                            <p class="text-sm text-slate-600">Phức aqua của Đồng(II). Cấu trúc: Bát diện (Octahedral). Hình thành khi hòa tan muối $Cu^{2+}$ vào nước.</p>
-                        </div>
-
-                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover-card">
-                            <div class="flex items-center justify-between mb-2">
-                                <h4 class="font-bold text-purple-800 text-lg">$[Cu(NH_3)_4(H_2O)_2]^{2+}$</h4>
-                                <span class="px-2 py-1 bg-indigo-100 text-indigo-800 rounded text-xs font-semibold">Xanh thẫm (Deep Blue)</span>
-                            </div>
-                            <p class="text-sm text-slate-600">Phức ammine của Đồng(II). Hình thành khi cho dung dịch $NH_3$ từ từ đến dư vào dung dịch $Cu^{2+}$. Phản ứng thay thế phối tử.</p>
-                        </div>
-
-                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover-card">
-                            <div class="flex items-center justify-between mb-2">
-                                <h4 class="font-bold text-purple-800 text-lg">$[Ag(NH_3)_2]^+$</h4>
-                                <span class="px-2 py-1 bg-slate-100 text-slate-800 rounded text-xs font-semibold">Không màu, dung dịch</span>
-                            </div>
-                            <p class="text-sm text-slate-600">Phức diamminesilver(I) (Thuốc thử Tollens). Cấu trúc: Đường thẳng. Ứng dụng để tráng gương aldehyde, glucose.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tính chất KL chuyển tiếp & Nước cứng -->
-                <div class="space-y-6">
-                    <div>
-                        <h2 class="text-2xl font-bold text-slate-800 mb-4 border-l-4 border-orange-500 pl-3">Sự Biến Đổi Màu Kim Loại (Fe, Cr)</h2>
-                        <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                            <table class="w-full text-sm custom-table">
-                                <tbody>
-                                    <tr>
-                                        <td class="font-semibold text-slate-700 w-1/3">Hợp chất $Fe^{2+}$</td>
-                                        <td>$FeO$ (đen), $Fe(OH)_2$ (<span class="text-green-600 font-medium">trắng xanh</span> $\rightarrow$ hóa nâu đỏ ngoài k.khí). Tính khử.</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="font-semibold text-slate-700">Hợp chất $Fe^{3+}$</td>
-                                        <td>$Fe_2O_3$ (đỏ nâu), $Fe(OH)_3$ (<span class="text-red-700 font-medium">nâu đỏ</span>). Trong dd có tính oxi hóa.</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="font-semibold text-slate-700">Crom (Cr)</td>
-                                        <td>
-                                            $Cr^{3+}$: Dịch chuyển lưỡng tính.<br>
-                                            $CrO_4^{2-}$ (<span class="text-yellow-500 font-bold">Vàng</span>, môi trường Base) $\rightleftharpoons$ $Cr_2O_7^{2-}$ (<span class="text-orange-500 font-bold">Da cam</span>, môi trường Axit).
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h2 class="text-2xl font-bold text-slate-800 mb-4 border-l-4 border-cyan-500 pl-3">Nước Cứng (Hard Water)</h2>
-                        <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 text-sm text-slate-700">
-                            <p class="mb-2">Nước chứa nhiều cation $Ca^{2+}$ và $Mg^{2+}$.</p>
-                            <ul class="list-disc pl-5 space-y-2">
-                                <li>**Tạm thời:** Chứa ion $HCO_3^-$. <br><span class="text-xs text-slate-500">Khắc phục: Đun sôi, hoặc dùng đủ $Ca(OH)_2, Na_2CO_3, Na_3PO_4$.</span></li>
-                                <li>**Vĩnh cửu:** Chứa $Cl^-, SO_4^{2-}$. <br><span class="text-xs text-slate-500">Khắc phục: Dùng $Na_2CO_3, Na_3PO_4$. (KHÔNG đun sôi được).</span></li>
-                                <li>**Toàn phần:** Chứa cả 2 loại trên.</li>
+                        <div class="theory-box">
+                            <h4 class="font-bold text-green-800 mb-2"><i class="fas fa-book-open mr-2"></i>Lý thuyết cần nhớ</h4>
+                            <ul class="list-disc pl-5 space-y-2 text-sm text-slate-700">
+                                <li><strong>Cấu trúc vật chất:</strong> Các chất được cấu tạo từ các hạt riêng biệt (nguyên tử, phân tử) chuyển động không ngừng. Nhiệt độ càng cao, chuyển động càng nhanh.</li>
+                                <li><strong>Nội năng ($U$):</strong> Là tổng động năng chuyển động nhiệt của các phân tử và thế năng tương tác giữa chúng. Nội năng phụ thuộc vào nhiệt độ và thể tích của hệ.</li>
+                                <li><strong>Sự truyền nhiệt:</strong> Nhiệt lượng tự truyền từ vật có nhiệt độ cao sang vật có nhiệt độ thấp cho đến khi cân bằng nhiệt. Có 3 hình thức: Dẫn nhiệt, Đối lưu, Bức xạ nhiệt.</li>
+                                <li><strong>Sự chuyển thể:</strong> Các quá trình nóng chảy (rắn -> lỏng), đông đặc (lỏng -> rắn), hóa hơi (lỏng -> khí), ngưng tụ (khí -> lỏng). Trong quá trình chuyển thể (thuần khiết), nhiệt độ của vật <strong>không đổi</strong>.</li>
                             </ul>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </section>
 
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                            <div>
+                                <h4 class="font-bold text-slate-800 mb-4 border-l-4 border-blue-500 pl-2">1. Công thức tính nhiệt lượng</h4>
+                                <div class="formula-box">
+                                    <p class="font-medium text-slate-600 mb-2">Nhiệt lượng thu vào/tỏa ra (đổi nhiệt độ):</p>
+                                    <div class="overflow-x-auto">$$Q = mc\Delta T$$</div>
+                                    <p class="text-xs text-slate-500 mt-2">Trong đó: $m$ là khối lượng, $c$ là nhiệt dung riêng, $\Delta T$ là độ biến thiên nhiệt độ.</p>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="formula-box">
+                                        <p class="font-medium text-slate-600 mb-2">Nhiệt nóng chảy:</p>
+                                        <div class="overflow-x-auto">$$Q = \lambda m$$</div>
+                                        <p class="text-xs text-slate-500 mt-2">$\lambda$: nhiệt nóng chảy riêng.</p>
+                                    </div>
+                                    <div class="formula-box">
+                                        <p class="font-medium text-slate-600 mb-2">Nhiệt hóa hơi:</p>
+                                        <div class="overflow-x-auto">$$Q = Lm$$</div>
+                                        <p class="text-xs text-slate-500 mt-2">$L$: nhiệt hóa hơi riêng.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-bold text-slate-800 mb-4 border-l-4 border-blue-500 pl-2">2. Nguyên lí I Nhiệt động lực học</h4>
+                                <div class="formula-box bg-blue-50">
+                                    <p class="text-sm text-slate-600 mb-2 text-center font-medium">Độ biến thiên nội năng bằng tổng công và nhiệt lượng hệ nhận được.</p>
+                                    <div class="text-center overflow-x-auto text-xl font-bold text-primary my-4">$$\Delta U = A + Q$$</div>
+                                    <div class="grid grid-cols-2 gap-4 text-xs font-medium">
+                                        <div class="bg-white p-2 rounded border border-slate-200 shadow-sm">
+                                            <div class="text-green-600 mb-1"><i class="fas fa-plus-circle"></i> Hệ nhận:</div>
+                                            <ul class="space-y-1">
+                                                <li>$A > 0$: Nhận công</li>
+                                                <li>$Q > 0$: Nhận nhiệt</li>
+                                            </ul>
+                                        </div>
+                                        <div class="bg-white p-2 rounded border border-slate-200 shadow-sm">
+                                            <div class="text-red-500 mb-1"><i class="fas fa-minus-circle"></i> Hệ thực hiện (tỏa):</div>
+                                            <ul class="space-y-1">
+                                                <li>$A < 0$: Sinh công</li>
+                                                <li>$Q < 0$: Tỏa nhiệt</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <p class="text-xs text-center mt-3 text-slate-500">$\Delta U > 0$: Nội năng tăng | $\Delta U < 0$: Nội năng giảm</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Chart: Heating Curve -->
+                        <div class="bg-white p-6 rounded-xl shadow-md border border-slate-100">
+                            <h4 class="font-bold text-slate-800 mb-2"><i class="fas fa-chart-line text-secondary mr-2"></i>Trực quan hóa: Đồ thị quá trình cấp nhiệt (Nước)</h4>
+                            <p class="text-sm text-slate-600 mb-4">Lưu ý sự đi ngang của đồ thị khi chuyển thể (Đá nóng chảy và Nước sôi). Lúc này $Q$ cung cấp dùng để phá vỡ liên kết, không làm tăng $T$.</p>
+                            <div class="chart-container">
+                                <canvas id="heatingCurveChart"></canvas>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Chương 2: Khí lí tưởng -->
+                    <section id="chuong-2-khi" class="mb-16 scroll-mt-6">
+                        <div class="flex items-center gap-3 mb-6 border-t pt-10 border-slate-200">
+                            <div class="bg-sky-100 text-sky-600 p-3 rounded-lg"><i class="fas fa-wind text-2xl"></i></div>
+                            <h3 class="text-2xl font-bold text-slate-800">Chương 2: Khí lí tưởng</h3>
+                        </div>
+
+                        <div class="theory-box border-sky-200 bg-sky-50">
+                            <h4 class="font-bold text-sky-800 mb-2"><i class="fas fa-book-open mr-2"></i>Lý thuyết cần nhớ</h4>
+                            <ul class="list-disc pl-5 space-y-2 text-sm text-slate-700">
+                                <li><strong>Khí lí tưởng:</strong> Là chất khí trong đó các phân tử được coi là chất điểm và chỉ tương tác với nhau khi va chạm.</li>
+                                <li><strong>Các thông số trạng thái:</strong> Một khối khí được xác định bởi 3 thông số: Áp suất ($p$), Thể tích ($V$) và Nhiệt độ tuyệt đối ($T$ tính bằng Kelvin).</li>
+                                <li><strong>Quá trình đẳng nhiệt (Boyle):</strong> Nhiệt độ không đổi, áp suất tỉ lệ nghịch với thể tích. Đồ thị $p-V$ là đường hypebol.</li>
+                                <li><strong>Quá trình đẳng tích (Charles):</strong> Thể tích không đổi, áp suất tỉ lệ thuận với nhiệt độ tuyệt đối. Đồ thị $p-T$ là đường thẳng kéo dài đi qua gốc tọa độ.</li>
+                                <li><strong>Quá trình đẳng áp (Gay-Lussac):</strong> Áp suất không đổi, thể tích tỉ lệ thuận với nhiệt độ tuyệt đối.</li>
+                            </ul>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <div>
+                                <h4 class="font-bold text-slate-800 mb-4 border-l-4 border-sky-500 pl-2">1. Phương trình & Thuyết động học</h4>
+                                <div class="formula-box">
+                                    <p class="font-medium text-slate-600 mb-2">Phương trình Claperon - Mendeleev:</p>
+                                    <div class="overflow-x-auto text-center">$$pV = nRT = \frac{m}{\mu}RT$$</div>
+                                    <p class="text-xs text-slate-500 mt-2 text-center">($R \approx 8.31 \text{ J/(mol.K)}$, $T = t^\circ C + 273$)</p>
+                                </div>
+                                <div class="formula-box">
+                                    <p class="font-medium text-slate-600 mb-2">Thuyết động học phân tử:</p>
+                                    <ul class="space-y-3 text-sm">
+                                        <li class="border-b border-slate-100 pb-2">Động năng tịnh tiến TB:<br> <span class="font-serif">$$W_d = \frac{3}{2}kT$$</span> <span class="text-xs text-slate-400">($k = 1.38 \times 10^{-23} \text{ J/K}$)</span></li>
+                                        <li>Áp suất khí:<br> <span class="font-serif">$$p = \frac{1}{3} \mu m_0 \overline{v^2}$$</span> <span class="text-xs text-slate-400">($\mu$: mật độ, $m_0$: k.lượng 1 phân tử)</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-bold text-slate-800 mb-4 border-l-4 border-sky-500 pl-2">2. Các đẳng quá trình</h4>
+                                <div class="bg-white p-5 rounded-lg shadow border border-slate-100 space-y-4">
+                                    <div class="flex flex-col sm:flex-row justify-between items-center bg-slate-50 p-3 rounded">
+                                        <span class="font-bold text-sky-700">Đẳng nhiệt (Boyle)</span>
+                                        <span class="font-serif">$T = \text{const} \Rightarrow p_1V_1 = p_2V_2$</span>
+                                    </div>
+                                    <div class="flex flex-col sm:flex-row justify-between items-center bg-slate-50 p-3 rounded">
+                                        <span class="font-bold text-sky-700">Đẳng tích (Charles)</span>
+                                        <span class="font-serif">$V = \text{const} \Rightarrow \frac{p_1}{T_1} = \frac{p_2}{T_2}$</span>
+                                    </div>
+                                    <div class="flex flex-col sm:flex-row justify-between items-center bg-slate-50 p-3 rounded">
+                                        <span class="font-bold text-sky-700">Đẳng áp (Gay-Lussac)</span>
+                                        <span class="font-serif">$p = \text{const} \Rightarrow \frac{V_1}{T_1} = \frac{V_2}{T_2}$</span>
+                                    </div>
+                                    <div class="pt-3 border-t border-slate-200">
+                                        <p class="text-sm font-medium text-center text-slate-600">Phương trình trạng thái chung:</p>
+                                        <div class="overflow-x-auto text-center mt-2 font-serif text-lg">$$\frac{p_1V_1}{T_1} = \frac{p_2V_2}{T_2}$$</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Chart: Isotherms -->
+                        <div class="bg-white p-6 rounded-xl shadow-md border border-slate-100 flex flex-col md:flex-row gap-6 items-center">
+                            <div class="w-full md:w-1/3">
+                                <h4 class="font-bold text-slate-800 mb-2"><i class="fas fa-sliders-h text-sky-500 mr-2"></i>Khảo sát Định luật Boyle</h4>
+                                <p class="text-sm text-slate-600 mb-4">Thay đổi Nhiệt độ ($T$) để xem sự dịch chuyển của đường đẳng nhiệt (đường Hypebol). Nhiệt độ càng cao, đường đẳng nhiệt càng xa trục tọa độ.</p>
+                                
+                                <label for="tempSlider" class="block text-sm font-medium text-slate-700 mb-1">Nhiệt độ: <span id="tempVal" class="text-sky-600 font-bold">300</span> K</label>
+                                <input type="range" id="tempSlider" min="100" max="800" value="300" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                                <div class="flex justify-between text-xs text-slate-400 mt-1">
+                                    <span>100K</span>
+                                    <span>800K</span>
+                                </div>
+                            </div>
+                            <div class="w-full md:w-2/3">
+                                <div class="chart-container">
+                                    <canvas id="isothermChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Chương 3: Từ trường -->
+                    <section id="chuong-3-tu-truong" class="mb-16 scroll-mt-6">
+                        <div class="flex items-center gap-3 mb-6 border-t pt-10 border-slate-200">
+                            <div class="bg-red-100 text-red-600 p-3 rounded-lg"><i class="fas fa-magnet text-2xl"></i></div>
+                            <h3 class="text-2xl font-bold text-slate-800">Chương 3: Từ trường</h3>
+                        </div>
+
+                        <div class="theory-box border-red-200 bg-red-50">
+                            <h4 class="font-bold text-red-800 mb-2"><i class="fas fa-book-open mr-2"></i>Lý thuyết cần nhớ</h4>
+                            <ul class="list-disc pl-5 space-y-2 text-sm text-slate-700">
+                                <li><strong>Từ trường:</strong> Là môi trường vật chất đặc biệt tồn tại xung quanh nam châm hoặc dòng điện. Đặc trưng bởi Véctơ cảm ứng từ $\vec{B}$.</li>
+                                <li><strong>Lực từ & Lực Lorentz:</strong> Lực từ tác dụng lên dây mang dòng điện. Lực Lorentz là lực từ tác dụng lên điện tích <em>đang chuyển động</em> trong từ trường. Xác định chiều bằng quy tắc "Bàn tay trái".</li>
+                                <li><strong>Hiện tượng cảm ứng điện từ:</strong> Khi từ thông qua một mạch kín biến thiên, trong mạch xuất hiện dòng điện cảm ứng.</li>
+                                <li><strong>Định luật Lenz:</strong> Dòng điện cảm ứng có chiều sao cho từ trường do nó sinh ra có tác dụng chống lại nguyên nhân sinh ra nó (dấu "-" trong công thức Faraday).</li>
+                            </ul>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="formula-box border-l-red-500">
+                                <h4 class="font-bold text-slate-800 mb-3 border-b pb-2">1. Lực từ & Lực Lorentz</h4>
+                                <div class="space-y-4">
+                                    <div>
+                                        <p class="text-sm font-medium text-slate-600">Lực từ tác dụng lên đoạn dây dẫn:</p>
+                                        <div class="overflow-x-auto text-center font-serif text-lg">$$F = BIl\sin\alpha$$</div>
+                                        <p class="text-xs text-slate-500 mt-1 text-center">($\alpha$ là góc tạo bởi $\vec{B}$ và chiều dòng điện)</p>
+                                    </div>
+                                    <div class="border-t pt-2">
+                                        <p class="text-sm font-medium text-slate-600">Lực Lorentz (Tác dụng lên điện tích):</p>
+                                        <div class="overflow-x-auto text-center font-serif text-lg">$$f = |q|vB\sin\alpha$$</div>
+                                        <p class="text-xs text-slate-500 mt-1 text-center">($\alpha$ là góc tạo bởi $\vec{B}$ và $\vec{v}$)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="formula-box border-l-red-500">
+                                <h4 class="font-bold text-slate-800 mb-3 border-b pb-2">2. Cảm ứng điện từ</h4>
+                                <ul class="space-y-4">
+                                    <li>
+                                        <span class="font-medium text-sm text-slate-600">Từ thông:</span>
+                                        <span class="font-serif"> $\Phi = NBS\cos\alpha$</span>
+                                        <div class="text-xs text-slate-500">($\alpha$ là góc giữa pháp tuyến $\vec{n}$ và $\vec{B}$)</div>
+                                    </li>
+                                    <li>
+                                        <span class="font-medium text-sm text-slate-600">Suất điện động cảm ứng (Faraday):</span>
+                                        <div class="overflow-x-auto mt-1">$$e_c = -\frac{\Delta \Phi}{\Delta t}$$</div>
+                                    </li>
+                                    <li>
+                                        <span class="font-medium text-sm text-slate-600">Suất điện động tự cảm:</span>
+                                        <div class="overflow-x-auto mt-1">$$e_{tc} = -L\frac{\Delta i}{\Delta t}$$</div>
+                                        <div class="text-xs text-slate-500 text-center mt-1">Với $L$ là độ tự cảm của ống dây: <br> $L = 4\pi \cdot 10^{-7} \cdot \frac{N^2}{l}S$</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Chương 4: Vật lí hạt nhân -->
+                    <section id="chuong-4-hat-nhan" class="mb-16 scroll-mt-6">
+                        <div class="flex items-center gap-3 mb-6 border-t pt-10 border-slate-200">
+                            <div class="bg-yellow-100 text-yellow-600 p-3 rounded-lg"><i class="fas fa-atom text-2xl"></i></div>
+                            <h3 class="text-2xl font-bold text-slate-800">Chương 4: Vật lí hạt nhân</h3>
+                        </div>
+
+                        <div class="theory-box border-yellow-200 bg-yellow-50">
+                            <h4 class="font-bold text-yellow-800 mb-2"><i class="fas fa-book-open mr-2"></i>Lý thuyết cần nhớ</h4>
+                            <ul class="list-disc pl-5 space-y-2 text-sm text-slate-700">
+                                <li><strong>Cấu tạo hạt nhân:</strong> Hạt nhân gồm Z proton và (A-Z) nơtron (gọi chung là nuclon). Ký hiệu: ${}^A_Z X$. Đồng vị là các hạt nhân cùng Z nhưng khác A.</li>
+                                <li><strong>Độ hụt khối & Năng lượng liên kết:</strong> Khối lượng hạt nhân luôn <em>nhỏ hơn</em> tổng khối lượng các nuclon tạo thành nó. Phần năng lượng tương ứng với độ hụt khối dùng để liên kết các nuclon (Năng lượng liên kết). Phản ứng hạt nhân tỏa năng lượng khi tạo ra hạt nhân bền vững hơn.</li>
+                                <li><strong>Hiện tượng phóng xạ:</strong> Quá trình phân rã tự phát của một hạt nhân không bền vững. Các loại tia phóng xạ: $\alpha$ (hạt He), $\beta^-$ (electron), $\beta^+$ (positron), $\gamma$ (sóng điện từ năng lượng cao).</li>
+                                <li><strong>Chu kì bán rã ($T$):</strong> Thời gian để một nửa số hạt nhân của chất phóng xạ ban đầu bị phân rã. Quá trình này không phụ thuộc vào điều kiện bên ngoài.</li>
+                            </ul>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <div class="formula-box border-l-yellow-500">
+                                <h4 class="font-bold text-slate-800 mb-3 border-b pb-2">1. Năng lượng liên kết</h4>
+                                <ul class="space-y-3 text-sm">
+                                    <li><strong>Độ hụt khối:</strong> <br> <span class="font-serif">$$\Delta m = [Z \cdot m_p + (A-Z)m_n] - m_X$$</span></li>
+                                    <li><strong>Hệ thức Einstein:</strong> $E = mc^2$</li>
+                                    <li><strong>Năng lượng liên kết:</strong> $W_{lk} = \Delta m \cdot c^2$</li>
+                                    <li class="bg-yellow-100 p-2 rounded"><strong>Năng lượng liên kết riêng:</strong> <span class="font-serif">$\varepsilon = \frac{W_{lk}}{A}$</span> <br> <span class="text-xs text-slate-600">Đặc trưng cho độ bền vững của hạt nhân (Càng lớn hạt nhân càng bền).</span></li>
+                                </ul>
+                            </div>
+                            
+                            <div class="formula-box border-l-yellow-500">
+                                <h4 class="font-bold text-slate-800 mb-3 border-b pb-2">2. Định luật phóng xạ</h4>
+                                <ul class="space-y-3 text-sm">
+                                    <li><strong>Số hạt còn lại:</strong> <br> <span class="font-serif block text-center my-1 text-lg">$$N = N_0 \cdot 2^{-\frac{t}{T}} = N_0 \cdot e^{-\lambda t}$$</span></li>
+                                    <li><strong>Khối lượng còn lại:</strong> <br> <span class="font-serif block text-center my-1">$$m = m_0 \cdot 2^{-\frac{t}{T}} = m_0 \cdot e^{-\lambda t}$$</span></li>
+                                    <li class="border-t pt-2 mt-2"><strong>Hằng số phóng xạ:</strong> $\lambda = \frac{\ln 2}{T}$</li>
+                                    <li><strong>Độ phóng xạ (Số phân rã/s):</strong> <br> $H = \lambda N = H_0 \cdot 2^{-\frac{t}{T}}$ <span class="text-xs text-slate-500">(Đơn vị: Bq hoặc Ci)</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Chart: Decay Curve -->
+                        <div class="bg-white p-6 rounded-xl shadow-md border border-slate-100">
+                            <h4 class="font-bold text-slate-800 mb-2"><i class="fas fa-chart-area text-yellow-500 mr-2"></i>Trực quan hóa: Đường cong phân rã phóng xạ</h4>
+                            <p class="text-sm text-slate-600 mb-4">Mô phỏng số hạt nhân còn lại $N(t)$ theo thời gian. Bạn có thể thấy sau mỗi chu kì $T$, số hạt giảm đi một nửa theo quy luật hàm số mũ.</p>
+                            <div class="chart-container">
+                                <canvas id="decayChart"></canvas>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- ========================================== -->
+                <!-- PHẦN 2: LỚP 11 -->
+                <!-- ========================================== -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-bold text-slate-800 border-b-4 border-accent inline-block pb-2 mb-8">Phần II: Kiến thức Lớp 11 (Dao động & Sóng)</h2>
+                    
+                    <!-- Chương 1: Dao động cơ -->
+                    <section id="chuong-1-dao-dong" class="mb-16 scroll-mt-6">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="bg-indigo-100 text-indigo-600 p-3 rounded-lg"><i class="fas fa-arrows-left-right-to-line text-2xl"></i></div>
+                            <h3 class="text-2xl font-bold text-slate-800">Chương 1: Dao động cơ</h3>
+                        </div>
+
+                        <div class="theory-box border-indigo-200 bg-indigo-50">
+                            <h4 class="font-bold text-indigo-800 mb-2"><i class="fas fa-book-open mr-2"></i>Lý thuyết cần nhớ</h4>
+                            <ul class="list-disc pl-5 space-y-2 text-sm text-slate-700">
+                                <li><strong>Dao động cơ:</strong> Là chuyển động qua lại quanh một vị trí cân bằng.</li>
+                                <li><strong>Dao động điều hòa:</strong> Là dao động trong đó li độ của vật là một hàm côsin (hay sin) của thời gian. Các đại lượng Biên độ ($A$), Tần số góc ($\omega$), Pha ban đầu ($\varphi$) là các hằng số.</li>
+                                <li><strong>Sự lệch pha:</strong> Vận tốc $v$ sớm pha $\pi/2$ so với li độ $x$. Gia tốc $a$ ngược pha so với li độ $x$ (hay sớm pha $\pi/2$ so với $v$).</li>
+                                <li><strong>Hiện tượng cộng hưởng:</strong> Xảy ra trong dao động cưỡng bức khi tần số của lực cưỡng bức bằng tần số dao động riêng của hệ. Lúc này, biên độ dao động đạt giá trị cực đại.</li>
+                            </ul>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                            <div class="formula-box border-l-indigo-500">
+                                <h4 class="font-bold text-slate-800 mb-3 border-b pb-2">1. Đại cương dao động</h4>
+                                <ul class="space-y-2 text-sm">
+                                    <li><strong>Phương trình:</strong> $x = A\cos(\omega t + \varphi)$</li>
+                                    <li><strong>Vận tốc:</strong> $v = x' = -\omega A\sin(\omega t + \varphi)$</li>
+                                    <li><strong>Gia tốc:</strong> $a = v' = -\omega^2 x = -\omega^2 A\cos(\omega t + \varphi)$</li>
+                                </ul>
+                                <div class="bg-indigo-50 p-3 rounded mt-3 text-center">
+                                    <p class="font-medium text-xs text-indigo-800 mb-1">Hệ thức độc lập thời gian:</p>
+                                    <div class="overflow-x-auto text-lg">$$A^2 = x^2 + \frac{v^2}{\omega^2} = \frac{a^2}{\omega^4} + \frac{v^2}{\omega^2}$$</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-col gap-4">
+                                <div class="bg-white rounded-lg shadow border border-slate-200 overflow-hidden">
+                                    <table class="w-full text-sm text-left">
+                                        <thead class="bg-indigo-100 text-indigo-800">
+                                            <tr>
+                                                <th class="px-4 py-2">Đại lượng</th>
+                                                <th class="px-4 py-2 border-l border-indigo-200">Con lắc lò xo</th>
+                                                <th class="px-4 py-2 border-l border-indigo-200">Con lắc đơn</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="border-b">
+                                                <td class="px-4 py-3 font-medium">Tần số góc ($\omega$)</td>
+                                                <td class="px-4 py-3 border-l text-center">$\omega = \sqrt{\frac{k}{m}}$</td>
+                                                <td class="px-4 py-3 border-l text-center">$\omega = \sqrt{\frac{g}{l}}$</td>
+                                            </tr>
+                                            <tr class="border-b bg-slate-50">
+                                                <td class="px-4 py-3 font-medium">Chu kì ($T$)</td>
+                                                <td class="px-4 py-3 border-l text-center">$T = 2\pi\sqrt{\frac{m}{k}}$</td>
+                                                <td class="px-4 py-3 border-l text-center">$T = 2\pi\sqrt{\frac{l}{g}}$</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-4 py-3 font-medium">Lực kéo về</td>
+                                                <td class="px-4 py-3 border-l text-center">$F = -kx$</td>
+                                                <td class="px-4 py-3 border-l text-center">$F = -mg\frac{s}{l}$</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="formula-box border-l-indigo-500 mb-0">
+                                    <p class="font-medium text-slate-600 mb-1">3. Năng lượng dao động:</p>
+                                    <div class="overflow-x-auto text-sm text-center">$$W = W_d + W_t = \frac{1}{2}mv^2 + \frac{1}{2}kx^2 = \frac{1}{2}kA^2 = \text{const}$$</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Chart: SHM -->
+                        <div class="bg-white p-6 rounded-xl shadow-md border border-slate-100">
+                            <h4 class="font-bold text-slate-800 mb-2"><i class="fas fa-wave-square text-indigo-500 mr-2"></i>Trực quan hóa: Đồ thị Động học Dao động Điều hòa</h4>
+                            <p class="text-sm text-slate-600 mb-4">Đồ thị biểu diễn Li độ ($x$), Vận tốc ($v$) và Gia tốc ($a$) theo thời gian. Chú ý sự vuông pha: Khi $x$ cực đại thì $v=0$, khi $x=0$ thì $v$ đạt cực đại.</p>
+                            <div class="chart-container">
+                                <canvas id="shmChart"></canvas>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Chương 2: Sóng cơ -->
+                    <section id="chuong-2-song" class="mb-16 scroll-mt-6">
+                        <div class="flex items-center gap-3 mb-6 border-t pt-10 border-slate-200">
+                            <div class="bg-teal-100 text-teal-600 p-3 rounded-lg"><i class="fas fa-water text-2xl"></i></div>
+                            <h3 class="text-2xl font-bold text-slate-800">Chương 2: Sóng cơ học</h3>
+                        </div>
+
+                        <div class="theory-box border-teal-200 bg-teal-50">
+                            <h4 class="font-bold text-teal-800 mb-2"><i class="fas fa-book-open mr-2"></i>Lý thuyết cần nhớ</h4>
+                            <ul class="list-disc pl-5 space-y-2 text-sm text-slate-700">
+                                <li><strong>Sóng cơ:</strong> Là dao động cơ lan truyền trong môi trường vật chất. Sóng <em>không</em> truyền đi vật chất, chỉ truyền pha dao động và năng lượng.</li>
+                                <li><strong>Phân loại:</strong> Sóng ngang (phương dao động vuông góc phương truyền sóng - truyền trong chất rắn, bề mặt chất lỏng). Sóng dọc (phương dao động trùng phương truyền sóng - truyền trong Rắn, Lỏng, Khí).</li>
+                                <li><strong>Hiện tượng giao thoa:</strong> Là sự tổng hợp của hai hay nhiều sóng kết hợp (cùng tần số, độ lệch pha không đổi). Tạo ra các gợn sóng ổn định gồm các cực đại (cộng hưởng) và cực tiểu (triệt tiêu).</li>
+                                <li><strong>Sóng dừng:</strong> Là giao thoa của sóng tới và sóng phản xạ trên cùng một phương truyền sóng, tạo ra các Điểm nút (đứng yên) và Điểm bụng (dao động cực đại) cố định trong không gian.</li>
+                            </ul>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div class="formula-box border-l-teal-500">
+                                <h4 class="font-bold text-slate-800 mb-2">1. Đại cương</h4>
+                                <ul class="space-y-3 text-sm">
+                                    <li><strong>Bước sóng:</strong> Quãng đường sóng truyền trong 1 chu kì. <br> $$\lambda = v \cdot T = \frac{v}{f}$$</li>
+                                    <li><strong>Độ lệch pha:</strong> Giữa 2 điểm cách nhau $d$. <br> $$\Delta \varphi = \frac{2\pi d}{\lambda}$$</li>
+                                </ul>
+                            </div>
+                            <div class="formula-box border-l-teal-500">
+                                <h4 class="font-bold text-slate-800 mb-2">2. Giao thoa</h4>
+                                <p class="text-xs text-slate-500 mb-2">(Với 2 nguồn cùng pha)</p>
+                                <ul class="space-y-3 text-sm">
+                                    <li><strong>Cực đại giao thoa:</strong> Hiệu đường đi bằng số nguyên lần bước sóng. <br> $$d_2 - d_1 = k\lambda$$</li>
+                                    <li><strong>Cực tiểu giao thoa:</strong> Hiệu đường đi bằng số bán nguyên lần bước sóng. <br> $$d_2 - d_1 = (k + 0.5)\lambda$$</li>
+                                </ul>
+                            </div>
+                            <div class="formula-box border-l-teal-500 md:col-span-2 lg:col-span-1">
+                                <h4 class="font-bold text-slate-800 mb-2">3. Sóng dừng</h4>
+                                <ul class="space-y-3 text-sm">
+                                    <li><strong>Hai đầu cố định:</strong> Chiều dài dây bằng số nguyên lần nửa bước sóng. <br> $$l = k\frac{\lambda}{2}$$ <span class="text-xs">($k$: số bụng)</span></li>
+                                    <li><strong>1 cố định, 1 tự do:</strong> <br> $$l = (2k+1)\frac{\lambda}{4}$$</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Chương 3: Điện xoay chiều -->
+                    <section id="chuong-3-dien-xoay-chieu" class="mb-16 scroll-mt-6">
+                        <div class="flex items-center gap-3 mb-6 border-t pt-10 border-slate-200">
+                            <div class="bg-yellow-100 text-yellow-600 p-3 rounded-lg"><i class="fas fa-bolt text-2xl"></i></div>
+                            <h3 class="text-2xl font-bold text-slate-800">Chương 3: Dòng điện xoay chiều</h3>
+                        </div>
+
+                        <div class="theory-box border-yellow-200 bg-yellow-50">
+                            <h4 class="font-bold text-yellow-800 mb-2"><i class="fas fa-book-open mr-2"></i>Lý thuyết cần nhớ</h4>
+                            <ul class="list-disc pl-5 space-y-2 text-sm text-slate-700">
+                                <li><strong>Nguyên tắc tạo ra AC:</strong> Dựa trên hiện tượng cảm ứng điện từ (quay một khung dây trong từ trường đều).</li>
+                                <li><strong>Đặc tính các phần tử:</strong>
+                                    <ul class="list-circle pl-5 mt-1">
+                                        <li>Điện trở R: Không gây lệch pha ($u_R$ cùng pha $i$). Tiêu thụ công suất.</li>
+                                        <li>Cuộn cảm L: Chống lại sự biến thiên dòng điện. Làm $u_L$ sớm pha $\pi/2$ so với $i$. Không tiêu thụ điện.</li>
+                                        <li>Tụ điện C: Cản trở dòng xoay chiều (tần số càng cao cản trở càng ít). Làm $u_C$ trễ pha $\pi/2$ so với $i$. Không tiêu thụ điện.</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Hệ số công suất ($\cos\varphi$):</strong> Đo lường mức độ hiệu quả sử dụng năng lượng điện. Lớn nhất bằng 1 (khi cộng hưởng hoặc mạch chỉ có R). Mạng điện thực tế yêu cầu $\cos\varphi > 0.85$.</li>
+                            </ul>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="formula-box border-l-yellow-400">
+                                <h4 class="font-bold text-slate-800 mb-3 border-b pb-2">1. Trở kháng mạch RLC nối tiếp</h4>
+                                <ul class="space-y-4 text-sm">
+                                    <li class="flex flex-wrap gap-4 justify-between bg-slate-50 p-2 rounded">
+                                        <span><strong>Cảm kháng:</strong> $Z_L = \omega L$</span>
+                                        <span><strong>Dung kháng:</strong> $Z_C = \frac{1}{\omega C}$</span>
+                                    </li>
+                                    <li class="text-center">
+                                        <strong>Tổng trở:</strong>
+                                        <div class="text-lg mt-1">$$Z = \sqrt{R^2 + (Z_L - Z_C)^2}$$</div>
+                                    </li>
+                                    <li class="text-center">
+                                        <strong>Định luật Ohm:</strong>
+                                        <div class="text-lg mt-1">$$I = \frac{U}{Z}$$</div>
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <div class="formula-box border-l-yellow-400">
+                                <h4 class="font-bold text-slate-800 mb-3 border-b pb-2">2. Công suất & Cộng hưởng</h4>
+                                <ul class="space-y-4 text-sm">
+                                    <li>
+                                        <div class="grid grid-cols-2 gap-2 text-center bg-slate-50 p-2 rounded">
+                                            <div>
+                                                <strong>Độ lệch pha:</strong>
+                                                <div class="mt-1">$\tan\varphi = \frac{Z_L - Z_C}{R}$</div>
+                                            </div>
+                                            <div class="border-l border-slate-200">
+                                                <strong>Hệ số công suất:</strong>
+                                                <div class="mt-1">$\cos\varphi = \frac{R}{Z}$</div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <strong>Công suất tiêu thụ:</strong>
+                                        <div>$$P = UI\cos\varphi = I^2R$$</div>
+                                    </li>
+                                    <li class="bg-yellow-100 p-3 rounded text-center">
+                                        <strong>Hiện tượng cộng hưởng điện:</strong> <br> Xảy ra khi $Z_L = Z_C$ <br>
+                                        <div class="text-lg my-1">$$\omega^2 LC = 1$$</div>
+                                        $\Rightarrow I_{max} = \frac{U}{R}$ và $P_{max} = \frac{U^2}{R}$
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+
+                <footer class="border-t border-slate-200 pt-8 pb-12 text-center text-slate-500">
+                    <p class="mb-2">Tài liệu ôn thi Tốt nghiệp THPT môn Vật Lý - Chương trình GDPT 2018</p>
+                    <p class="text-sm">Chúc bạn ôn tập hiệu quả và đạt điểm cao trong kỳ thi sắp tới! <i class="fas fa-graduation-cap text-primary"></i></p>
+                </footer>
+
+            </div>
+        </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto">
-        <div class="container mx-auto px-4 text-center">
-            <p class="text-sm font-medium">© 2026 Ứng Dụng Tổng Hợp Hóa Học THPT Quốc Gia</p>
-            <p class="text-xs mt-2 text-slate-400">Thiết kế tối ưu cho trải nghiệm tương tác tự học. Nội dung bám sát Chương trình GDPT 2018.</p>
-        </div>
-    </footer>
-
     <script>
-        // --- DATA & STATE ---
-        const organicData = [
-            { id: 1, name: "Alkane", formula: "$C_nH_{2n+2}$", type: "hydrocarbon", desc: "Chỉ chứa liên kết $\\sigma$. Nguồn gốc dầu mỏ.", react: "Phản ứng thế Halogen (cần ánh sáng). Crackinh." },
-            { id: 2, name: "Alkene", formula: "$C_nH_{2n}$", type: "hydrocarbon", desc: "Có 1 liên kết đôi ($1 \\sigma + 1 \\pi$). Đồng phân hình học (cis-trans).", react: "Cộng ($H_2$, $Br_2$ làm mất màu nâu đỏ, $H_2O$, $HX$). Trùng hợp tạo polymer. OXH bằng $KMnO_4$." },
-            { id: 3, name: "Alkyne", formula: "$C_nH_{2n-2}$", type: "hydrocarbon", desc: "Có 1 liên kết ba ($1 \\sigma + 2 \\pi$).", react: "Alk-1-yne thế ion KL tạo kết tủa vàng với $AgNO_3/NH_3$." },
-            { id: 4, name: "Alcohol", formula: "$R-OH$", type: "oxygen", desc: "Nhóm hydroxyl gắn C no. Bậc alcohol = Bậc C mang OH.", react: "Thế H linh động bởi $Na$. Tách nước tạo alkene/ether. OXH không hoàn toàn bởi $CuO$. Đa chức có OH kề nhau hòa tan $Cu(OH)_2$ tạo phức xanh lam." },
-            { id: 5, name: "Aldehyde & Ketone", formula: "$R-CHO$ / $R-CO-R'$", type: "oxygen", desc: "Chứa nhóm Carbonyl ($C=O$).", react: "Aldehyde: Tính khử (Tráng bạc tạo $Ag\\downarrow$, khử $Cu(OH)_2$ tạo $Cu_2O\\downarrow$ đỏ gạch). Ketone không có phản ứng OXH này." },
-            { id: 6, name: "Carboxylic Acid", formula: "$R-COOH$", type: "oxygen", desc: "Nhóm carboxyl. Tính axit yếu nhưng mạnh hơn phenol và axit carbonic.", react: "Quỳ tím $\\rightarrow$ đỏ. Tác dụng KL, base, oxide base, muối carbonate (sủi bọt khí $CO_2$). Phản ứng Ester hóa." },
-            { id: 7, name: "Ester & Lipid", formula: "$R-COO-R'$", type: "oxygen", desc: "Lipid là triester của glycerol và axit béo.", react: "Thủy phân môi trường acid (thuận nghịch) và môi trường base (Xà phòng hóa, 1 chiều). Chỉ số xà phòng hóa, chỉ số axit, chỉ số iot." },
-            { id: 8, name: "Carbohydrate", formula: "$C_n(H_2O)_m$", type: "oxygen", desc: "Monosaccharide (Glucose, Fructose), Di (Saccharose, Maltose), Poly (Tinh bột, Cellulose).", react: "Glu, Fruc, Maltose có tính khử (Tráng bạc). Tinh bột nhận biết bằng Iot (xanh tím). Cellulose tạo thuốc súng không khói." },
-            { id: 9, name: "Amine", formula: "$R-NH_2$", type: "nitrogen", desc: "Dẫn xuất của $NH_3$. Có tính base.", react: "Làm xanh quỳ tím (amine mạch hở). Aniline ($C_6H_5NH_2$) không đổi màu quỳ, tạo kết tủa trắng với dung dịch $Br_2$." },
-            { id: 10, name: "Amino Acid", formula: "$H_2N-R-COOH$", type: "nitrogen", desc: "Chứa đồng thời nhóm amino và carboxyl. Tồn tại dạng ion lưỡng cực.", react: "Tính chất lưỡng tính (tác dụng axit & base). Phản ứng trùng ngưng tạo peptide/protein." },
-            { id: 11, name: "Peptide & Protein", formula: "(-CO-NH-)", type: "nitrogen", desc: "Polyme cấu tạo từ gốc $\\alpha$-amino acid qua liên kết peptide.", react: "Thủy phân. Phản ứng màu Biuret: tác dụng $Cu(OH)_2/OH^-$ tạo phức màu **tím** (trừ dipeptide)." },
-            { id: 12, name: "Polymer", formula: "Polymer", type: "nitrogen", desc: "Phân tử khối rất lớn. Phân loại: Tự nhiên, nhân tạo, tổng hợp.", react: "Điều chế bằng phản ứng trùng hợp (nếu có $C=C$) hoặc trùng ngưng (nếu có 2 nhóm chức tách nước)." }
-        ];
+        // --- Navigation Logic ---
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        let sidebarOpen = false;
 
-        const electroSeries = [
-            { ion: "$K^+$", metal: "$K$" }, { ion: "$Na^+$", metal: "$Na$" }, { ion: "$Mg^{2+}$", metal: "$Mg$" },
-            { ion: "$Al^{3+}$", metal: "$Al$" }, { ion: "$Zn^{2+}$", metal: "$Zn$" }, { ion: "$Fe^{2+}$", metal: "$Fe$" },
-            { ion: "$Ni^{2+}$", metal: "$Ni$" }, { ion: "$Sn^{2+}$", metal: "$Sn$" }, { ion: "$Pb^{2+}$", metal: "$Pb$" },
-            { ion: "$H^+$", metal: "$H_2$" }, { ion: "$Cu^{2+}$", metal: "$Cu$" }, { ion: "$Fe^{3+}$", metal: "$Fe^{2+}$" },
-            { ion: "$Ag^+$", metal: "$Ag$" }, { ion: "$Au^{3+}$", metal: "$Au$" }
-        ];
+        function toggleSidebar() {
+            sidebarOpen = !sidebarOpen;
+            if (sidebarOpen) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
 
-        // --- INIT ---
-        document.addEventListener('DOMContentLoaded', () => {
-            renderOrganicCards(organicData);
-            renderElectroSeries();
-            initChart();
-            // Need a slight delay for MathJax to be fully loaded and process dynamic HTML
-            setTimeout(() => {
-                if (window.MathJax) MathJax.typesetPromise();
-            }, 500);
+        function closeSidebarOnMobile() {
+            if (window.innerWidth < 768 && sidebarOpen) {
+                toggleSidebar();
+            }
+        }
+
+        // --- Chart Configurations ---
+        
+        // 1. Heating Curve Chart (Nước)
+        const ctxHeating = document.getElementById('heatingCurveChart').getContext('2d');
+        const heatingData = [
+            {x: 0, y: -20}, // Ice
+            {x: 10, y: 0},  // Reaches 0
+            {x: 25, y: 0},  // Melting (Latent heat)
+            {x: 60, y: 100}, // Heating water
+            {x: 85, y: 100}, // Boiling (Latent heat)
+            {x: 100, y: 120} // Heating steam
+        ];
+        new Chart(ctxHeating, {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: 'Nhiệt độ (°C)',
+                    data: heatingData,
+                    borderColor: '#f59e0b', // amber-500
+                    backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                    borderWidth: 3,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#ea580c',
+                    fill: false,
+                    tension: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = ` Nhiệt độ: ${context.parsed.y}°C`;
+                                if(context.parsed.x > 10 && context.parsed.x < 25) label += " (Đang nóng chảy)";
+                                else if(context.parsed.x > 60 && context.parsed.x < 85) label += " (Đang sôi/Hóa hơi)";
+                                return label;
+                            }
+                        }
+                    },
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        type: 'linear',
+                        title: { display: true, text: 'Nhiệt lượng cung cấp Q (Time)' },
+                        ticks: { display: false } // Hide arbitrary time units
+                    },
+                    y: {
+                        title: { display: true, text: 'Nhiệt độ T (°C)' },
+                        suggestedMin: -30,
+                        suggestedMax: 140
+                    }
+                },
+                interaction: { intersect: false, mode: 'index' }
+            }
         });
 
-        // --- NAVIGATION ---
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('bg-indigo-600', 'text-white', 'shadow');
-                btn.classList.add('text-slate-600', 'bg-transparent');
-            });
-
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-            let activeBtn = document.getElementById(`btn-${tabId}`);
-            activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow');
-            activeBtn.classList.remove('text-slate-600', 'bg-transparent');
-
-            // Force MathJax rendering on the visible tab just in case
-            if (window.MathJax) MathJax.typesetPromise([document.getElementById(`tab-${tabId}`)]);
-        }
-
-        // --- CALCULATORS ---
-        function calcFaraday() {
-            const A = parseFloat(document.getElementById('inp-A').value);
-            const n = parseFloat(document.getElementById('inp-n').value);
-            const I = parseFloat(document.getElementById('inp-I').value);
-            const t = parseFloat(document.getElementById('inp-t').value);
-            const display = document.getElementById('res-faraday');
-            
-            if (A && n && I && t) {
-                const m = (A * I * t) / (n * 96500);
-                display.innerText = `m = ${m.toFixed(4)} gam`;
-                display.classList.remove('hidden');
-            } else {
-                display.innerText = "Nhập đủ thông tin!";
-                display.classList.remove('hidden');
+        // 2. Isotherm Chart (Boyle's Law)
+        const ctxIsotherm = document.getElementById('isothermChart').getContext('2d');
+        const tempSlider = document.getElementById('tempSlider');
+        const tempValDisplay = document.getElementById('tempVal');
+        
+        // Data generator for P = c/V
+        function generateIsotherm(T) {
+            const data = [];
+            const c = T * 0.1; // Arbitrary constant for visual scale
+            for(let v = 1; v <= 20; v += 0.5) {
+                data.push({x: v, y: c / v});
             }
+            return data;
         }
 
-        function calcPH() {
-            const h = parseFloat(document.getElementById('inp-h-conc').value);
-            const display = document.getElementById('res-ph');
-            if (h > 0) {
-                const ph = -Math.log10(h);
-                display.innerText = `pH = ${ph.toFixed(2)}`;
-                display.classList.remove('hidden');
-            } else {
-                display.innerText = "Nồng độ phải > 0";
-                display.classList.remove('hidden');
-            }
-        }
-
-        // --- DYNAMIC RENDERING ---
-        function renderOrganicCards(data) {
-            const container = document.getElementById('organic-grid');
-            container.innerHTML = '';
-
-            data.forEach(item => {
-                let colorClass = "bg-white border-slate-200 text-slate-800";
-                let badgeClass = "bg-slate-100 text-slate-600";
-                
-                if(item.type === 'hydrocarbon') badgeClass = "bg-teal-100 text-teal-800";
-                if(item.type === 'oxygen') badgeClass = "bg-rose-100 text-rose-800";
-                if(item.type === 'nitrogen') badgeClass = "bg-amber-100 text-amber-800";
-
-                const card = document.createElement('div');
-                card.className = `p-5 rounded-xl border shadow-sm hover-card ${colorClass} flex flex-col`;
-                card.innerHTML = `
-                    <div class="flex justify-between items-start mb-3">
-                        <h3 class="font-bold text-lg text-indigo-900">${item.name}</h3>
-                        <span class="text-xs px-2 py-1 rounded font-medium ${badgeClass}">${item.formula}</span>
-                    </div>
-                    <p class="text-sm text-slate-600 mb-4 flex-grow">${item.desc}</p>
-                    <div class="mt-auto pt-3 border-t border-slate-100">
-                        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Tính chất / Nhận biết</p>
-                        <p class="text-sm font-medium text-slate-700 leading-snug">${item.react}</p>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-            
-            if (window.MathJax) {
-                MathJax.typesetPromise([container]).catch(err => console.log(err));
-            }
-        }
-
-        function filterOrganic(type, btnElement) {
-            document.querySelectorAll('.org-filter-btn').forEach(btn => {
-                btn.classList.remove('bg-teal-600', 'text-white', 'shadow-sm');
-                btn.classList.add('bg-white', 'text-slate-600');
-            });
-            btnElement.classList.remove('bg-white', 'text-slate-600');
-            btnElement.classList.add('bg-teal-600', 'text-white', 'shadow-sm');
-
-            if (type === 'all') {
-                renderOrganicCards(organicData);
-            } else {
-                renderOrganicCards(organicData.filter(item => item.type === type));
-            }
-        }
-
-        function renderElectroSeries() {
-            const container = document.getElementById('electro-series');
-            electroSeries.forEach(pair => {
-                const div = document.createElement('div');
-                div.className = "flex flex-col items-center justify-center p-2 min-w-[60px] relative group";
-                div.innerHTML = `
-                    <div class="font-bold text-blue-700 text-base mb-1">${pair.ion}</div>
-                    <div class="w-full h-px bg-slate-300 my-1"></div>
-                    <div class="font-medium text-slate-700">${pair.metal}</div>
-                    
-                    <!-- Arrow overlay -->
-                    <div class="absolute -right-2 top-1/2 -translate-y-1/2 text-slate-300 text-xs hidden sm:block">
-                        ${pair.ion !== '$Au^{3+}$' ? '›' : ''}
-                    </div>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        // --- CHARTS ---
-        function initChart() {
-            const ctx = document.getElementById('isomerChart').getContext('2d');
-            
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['n=2', 'n=3', 'n=4', 'n=5'],
-                    datasets: [
-                        {
-                            label: 'Ester (O₂)',
-                            data: [1, 2, 4, 8],
-                            backgroundColor: '#0d9488', // Teal
-                            borderRadius: 4
-                        },
-                        {
-                            label: 'Amine (N)',
-                            data: [2, 4, 8, 16],
-                            backgroundColor: '#e11d48', // Rose
-                            borderRadius: 4
-                        },
-                        {
-                            label: 'Amino Acid',
-                            data: [0, 2, 5, null], // n=2 is 1 (Gly), n=3 is 2(Ala + B-Ala), n=4 is 5. Using formula 2^(n-1)-n : n=2 => 2^1-2=0 (Formula is an approximation trick).
-                            // Wait, standard trick formula for Amino Acid is 2^(n-1)-n (usually works for isomer Alpha).
-                            // Let's just use data [1, 2, 5, 10] conceptually to show growth.
-                            data: [1, 2, 5, 12],
-                            backgroundColor: '#4f46e5', // Indigo
-                            borderRadius: 4
-                        }
-                    ]
+        const isothermChart = new Chart(ctxIsotherm, {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: `Đường đẳng nhiệt (T = 300K)`,
+                    data: generateIsotherm(300),
+                    borderColor: '#3b82f6', // blue-500
+                    borderWidth: 3,
+                    pointRadius: 0,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { type: 'linear', title: { display: true, text: 'Thể tích V (Lít)' }, min: 0, max: 20 },
+                    y: { title: { display: true, text: 'Áp suất P (atm)' }, min: 0, max: 20 }
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom', labels: { boxWidth: 12 } }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: '#f1f5f9' }
-                        },
-                        x: {
-                            grid: { display: false }
-                        }
+                animation: { duration: 200 } // smooth slider transition
+            }
+        });
+
+        tempSlider.addEventListener('input', function(e) {
+            const T = e.target.value;
+            tempValDisplay.innerText = T;
+            isothermChart.data.datasets[0].data = generateIsotherm(T);
+            isothermChart.data.datasets[0].label = `Đường đẳng nhiệt (T = ${T}K)`;
+            // Change color slightly based on temp (cooler = blue, hotter = red)
+            const colorIntensity = Math.floor((T - 100) / 700 * 255);
+            isothermChart.data.datasets[0].borderColor = `rgb(${colorIntensity}, 100, ${255 - colorIntensity})`;
+            isothermChart.update();
+        });
+
+        // 3. Radioactive Decay Chart
+        const ctxDecay = document.getElementById('decayChart').getContext('2d');
+        function generateDecay() {
+            const data = [];
+            const T = 5; // Half-life
+            const N0 = 100;
+            for(let t = 0; t <= 20; t += 0.5) {
+                data.push({x: t, y: N0 * Math.pow(2, -t/T)});
+            }
+            return data;
+        }
+
+        new Chart(ctxDecay, {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: 'Số hạt nhân %',
+                    data: generateDecay(),
+                    borderColor: '#eab308', // yellow-500
+                    backgroundColor: 'rgba(234, 179, 8, 0.2)',
+                    borderWidth: 3,
+                    fill: true,
+                    pointRadius: 0,
+                    tension: 0.2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { type: 'linear', title: { display: true, text: 'Thời gian t (Năm)' } },
+                    y: { title: { display: true, text: 'Phần trăm N/N0 (%)' }, min: 0, max: 105 }
+                },
+                plugins: {
+                    annotation: {
+                        // We will use standard tooltip to show half-life conceptually
                     }
                 }
-            });
+            }
+        });
+
+        // 4. SHM Kinematics Chart
+        const ctxSHM = document.getElementById('shmChart').getContext('2d');
+        function generateSHM() {
+            const dataX = []; const dataV = []; const dataA = [];
+            const omega = Math.PI; // T = 2s
+            const A = 10;
+            for(let t = 0; t <= 4; t += 0.05) { // 2 periods
+                const x = A * Math.cos(omega * t);
+                const v = -omega * A * Math.sin(omega * t) * 0.3; // scaled for visibility
+                const a = -Math.pow(omega, 2) * x * 0.1; // scaled for visibility
+                dataX.push({x: t, y: x});
+                dataV.push({x: t, y: v});
+                dataA.push({x: t, y: a});
+            }
+            return {dataX, dataV, dataA};
         }
+        
+        const shmData = generateSHM();
+        new Chart(ctxSHM, {
+            type: 'line',
+            data: {
+                datasets: [
+                    { label: 'Li độ x (cm)', data: shmData.dataX, borderColor: '#3b82f6', borderWidth: 2, pointRadius: 0, tension: 0.4 },
+                    { label: 'Vận tốc v (scaled)', data: shmData.dataV, borderColor: '#f43f5e', borderDash: [5, 5], borderWidth: 2, pointRadius: 0, tension: 0.4 },
+                    { label: 'Gia tốc a (scaled)', data: shmData.dataA, borderColor: '#10b981', borderDash: [2, 2], borderWidth: 2, pointRadius: 0, tension: 0.4 }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { type: 'linear', title: { display: true, text: 'Thời gian t (s)' } },
+                    y: { title: { display: true, text: 'Giá trị' } }
+                }
+            }
+        });
     </script>
 </body>
 </html>
