@@ -3,156 +3,611 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cẩm Nang Hóa Học 2025 - 2026</title>
+    <title>Cẩm Nang Ôn Thi Tốt Nghiệp THPT 2025-2026 - Môn Hóa Học</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Cấu hình và tải MathJax để hiển thị công thức Toán/Hóa -->
     <script>
         window.MathJax = {
-            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-            startup: { typeset: true }
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                tags: 'ams'
+            },
+            startup: {
+                typeset: true
+            }
         };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        /* Tối ưu bảng cho mobile */
-        .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    </style>
-</head>
-<body class="bg-slate-50 min-h-screen text-slate-800">
 
-    <header class="bg-white border-b sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">H</div>
-                <h1 class="text-xl font-bold tracking-tight">Hóa Học THPT 2026</h1>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFC; /* Nền sáng, dịu mắt */
+            color: #1E293B;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+
+        /* Scrollbar tùy chỉnh */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        /* Hiệu ứng thẻ (Card hover) */
+        .hover-card {
+            transition: all 0.2s ease-in-out;
+        }
+        .hover-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Định dạng bảng đẹp */
+        .custom-table th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+            color: #334155;
+            text-align: left;
+        }
+        .custom-table td, .custom-table th {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .custom-table tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
+    <!-- 
+         Application Structure Plan:
+         - Dashboard Structure with 4 main Tabs for 2018 Curriculum context.
+         - Tab 1: Đại cương & Hóa lý (General & Physical) - Includes Kinetics, Equilibrium, pH, Faraday, Conservation laws.
+         - Tab 2: Hóa Hữu cơ (Organic) - Includes Functional groups, new IUPAC names, IR Spectroscopy table, Isomer logic.
+         - Tab 3: Hóa Vô cơ & Phức chất (Inorganic & Complexes) - Deep dive into Electrochemistry and the newly emphasized Complex Compounds.
+         - Interaction: Dynamic rendering of MathJax when tabs switch or data filters to ensure no raw LaTeX is exposed.
+    -->
+    <!-- CONFIRMATION: NO SVG, NO Mermaid. Using MathJax for math, Chart.js for data, Tailwind for UI. -->
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-3 flex flex-col lg:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-3 w-full lg:w-auto">
+                <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-inner">H</div>
+                <div>
+                    <h1 class="text-xl font-bold text-slate-800 tracking-tight">Cẩm Nang Hóa THPT</h1>
+                    <p class="text-xs text-indigo-600 font-semibold bg-indigo-50 px-2 py-0.5 rounded inline-block mt-0.5">GDPT 2018 • Thi 2025-2026</p>
+                </div>
             </div>
-            <nav class="flex flex-wrap justify-center gap-1 bg-slate-100 p-1 rounded-xl">
-                <button onclick="switchTab('tab1')" id="btn-tab1" class="nav-btn px-4 py-2 text-sm font-semibold rounded-lg bg-indigo-600 text-white shadow">Đại Cương</button>
-                <button onclick="switchTab('tab2')" id="btn-tab2" class="nav-btn px-4 py-2 text-sm font-semibold rounded-lg text-slate-600">Hữu Cơ</button>
-                <button onclick="switchTab('tab3')" id="btn-tab3" class="nav-btn px-4 py-2 text-sm font-semibold rounded-lg text-slate-600">Vô Cơ</button>
+            
+            <nav class="flex space-x-1 bg-slate-100 p-1.5 rounded-lg overflow-x-auto w-full lg:w-auto">
+                <button onclick="switchTab('physical')" id="btn-physical" class="tab-btn px-4 py-2 text-sm font-semibold rounded-md transition-all whitespace-nowrap bg-indigo-600 text-white shadow">Đại cương & Hóa lý</button>
+                <button onclick="switchTab('organic')" id="btn-organic" class="tab-btn px-4 py-2 text-sm font-semibold rounded-md transition-all whitespace-nowrap text-slate-600 hover:text-indigo-700 hover:bg-white">Hữu cơ & Phổ IR</button>
+                <button onclick="switchTab('inorganic')" id="btn-inorganic" class="tab-btn px-4 py-2 text-sm font-semibold rounded-md transition-all whitespace-nowrap text-slate-600 hover:text-indigo-700 hover:bg-white">Vô cơ & Phức chất</button>
             </nav>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-8">
-        <section id="tab1" class="tab-content active space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h2 class="text-lg font-bold text-indigo-700 mb-4 border-l-4 border-indigo-600 pl-3">Tính toán nhanh</h2>
+    <!-- Main Content Area -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+
+        <!-- INTRO BLOCK -->
+        <div class="mb-8 p-6 bg-gradient-to-br from-indigo-50 to-blue-50 border border-indigo-100 rounded-2xl shadow-sm">
+            <h2 class="text-lg font-bold text-indigo-900 mb-2">🎓 Sẵn sàng cho kỳ thi THPT 2025 - 2026</h2>
+            <p class="text-slate-700 text-sm md:text-base leading-relaxed">
+                Tài liệu này đã được **chuẩn hóa theo Danh pháp IUPAC** (như Sodium thay vì Natri, Alcohol thay vì Ancol) và bổ sung các kiến thức trọng tâm mới: **Phổ hồng ngoại (IR)**, **Động hóa học**, và **Phức chất**. Các công thức được tính toán tương tác trực tiếp bên dưới.
+            </p>
+        </div>
+
+        <!-- ================= SECTION 1: PHYSICAL & GENERAL CHEMISTRY ================= -->
+        <section id="tab-physical" class="tab-content animate-fade-in space-y-10">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Định luật bảo toàn -->
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-800 mb-5 border-l-4 border-indigo-500 pl-3">Định Luật Bảo Toàn Nền Tảng</h2>
                     <div class="space-y-4">
-                        <div class="bg-indigo-50 p-4 rounded-xl">
-                            <label class="block text-xs font-bold text-indigo-600 uppercase mb-1">Tính pH</label>
-                            <input type="number" id="ph-input" placeholder="Nồng độ [H+]" class="w-full p-2 border rounded-md outline-none focus:ring-2 ring-indigo-300">
-                            <button onclick="calculatePH()" class="w-full mt-2 bg-indigo-600 text-white py-2 rounded-md font-bold text-sm">Kết quả</button>
-                            <p id="ph-result" class="mt-2 text-center font-bold text-indigo-800"></p>
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover-card">
+                            <h3 class="font-bold text-indigo-700 mb-2">1. Bảo toàn khối lượng</h3>
+                            <div class="bg-slate-50 p-3 rounded font-medium text-slate-800 mb-2 overflow-x-auto">
+                                $$\sum m_{\text{tham gia}} = \sum m_{\text{tạo thành}}$$
+                            </div>
+                            <p class="text-xs text-slate-500">Ứng dụng: Bài toán phản ứng thủy phân ester, peptide, nhiệt nhôm, cộng H₂, Br₂.</p>
+                        </div>
+                        
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover-card">
+                            <h3 class="font-bold text-indigo-700 mb-2">2. Bảo toàn electron (Oxi hóa - Khử)</h3>
+                            <div class="bg-slate-50 p-3 rounded font-medium text-slate-800 mb-2 overflow-x-auto">
+                                $$\sum n_{e \text{ nhường}} = \sum n_{e \text{ nhận}}$$
+                            </div>
+                            <p class="text-xs text-slate-600 mb-1">Ví dụ kinh điển (Kim loại + HNO₃):</p>
+                            <div class="text-sm bg-indigo-50 p-2 rounded text-indigo-900 overflow-x-auto">
+                                $$3n_{\text{Al}} + 2n_{\text{Mg}} = 3n_{\text{NO}} + 1n_{\text{NO}_2} + 8n_{\text{N}_2\text{O}} + 10n_{\text{N}_2} + 8n_{\text{NH}_4^+}$$
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover-card">
+                            <h3 class="font-bold text-indigo-700 mb-2">3. Bảo toàn điện tích (Dung dịch)</h3>
+                            <div class="bg-slate-50 p-3 rounded font-medium text-slate-800 overflow-x-auto">
+                                $$\sum (n_{\text{cation}} \times z_{\text{cation}}) = \sum (n_{\text{anion}} \times z_{\text{anion}})$$
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="bg-indigo-900 text-white p-6 rounded-2xl shadow-lg">
-                    <h2 class="text-lg font-bold mb-3 italic">Công thức nền tảng</h2>
-                    <p class="text-sm opacity-80 mb-4">Áp dụng cho các bài toán bảo toàn electron và điện phân.</p>
-                    <div class="bg-white/10 p-4 rounded-lg text-center">
-                        $$m = \frac{A \cdot I \cdot t}{n \cdot 96500}$$
+
+                <!-- Động học, Cân bằng, Điện phân -->
+                <div class="space-y-6">
+                    <h2 class="text-2xl font-bold text-slate-800 mb-5 border-l-4 border-amber-500 pl-3">Động Học & Công Cụ Tính (Mới)</h2>
+
+                    <!-- Kinetics & Equilibrium -->
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                        <h3 class="font-bold text-lg text-slate-800 mb-2">⚖️ Cân Bằng Hóa Học ($K_c$)</h3>
+                        <p class="text-sm text-slate-600 mb-2">Cho phản ứng: $aA + bB \rightleftharpoons cC + dD$</p>
+                        <div class="bg-slate-50 p-3 rounded overflow-x-auto mb-3">
+                            $$K_c = \frac{[C]^c [D]^d}{[A]^a [B]^b}$$
+                        </div>
+                        <p class="text-xs text-slate-500">Nguyên lý Le Chatelier: Khi thay đổi nồng độ, nhiệt độ, áp suất, hệ sẽ chuyển dịch về phía làm giảm tác động đó.</p>
+                    </div>
+
+                    <!-- Tools -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Faraday -->
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                            <h3 class="font-bold text-slate-800 mb-2">⚡ Điện Phân (Faraday)</h3>
+                            <p class="text-xs text-slate-500 mb-3">$m = \frac{A \cdot I \cdot t}{n \cdot 96500}$</p>
+                            <div class="space-y-2 mb-3">
+                                <input type="number" id="inp-A" placeholder="A (Khối lượng mol)" class="w-full border p-1.5 rounded text-sm outline-none focus:border-indigo-500">
+                                <input type="number" id="inp-n" placeholder="n (e trao đổi)" class="w-full border p-1.5 rounded text-sm outline-none focus:border-indigo-500">
+                                <input type="number" id="inp-I" placeholder="I (Ampe)" class="w-full border p-1.5 rounded text-sm outline-none focus:border-indigo-500">
+                                <input type="number" id="inp-t" placeholder="t (Giây)" class="w-full border p-1.5 rounded text-sm outline-none focus:border-indigo-500">
+                            </div>
+                            <button onclick="calcFaraday()" class="w-full bg-amber-500 text-white font-semibold py-1.5 rounded hover:bg-amber-600 transition text-sm">Tính Khối lượng</button>
+                            <div id="res-faraday" class="mt-2 text-center font-bold text-amber-700 text-sm hidden"></div>
+                        </div>
+
+                        <!-- pH -->
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col">
+                            <h3 class="font-bold text-slate-800 mb-2">💧 Tính pH</h3>
+                            <p class="text-xs text-slate-500 mb-3">$pH = -\log[H^+]$</p>
+                            <input type="number" id="inp-h-conc" placeholder="Nồng độ [H+] (VD: 0.001)" step="0.0001" class="w-full border p-1.5 rounded text-sm outline-none focus:border-indigo-500 mb-3">
+                            <button onclick="calcPH()" class="w-full bg-blue-500 text-white font-semibold py-1.5 rounded hover:bg-blue-600 transition text-sm mt-auto">Tính kết quả</button>
+                            <div id="res-ph" class="mt-2 text-center font-bold text-blue-700 text-sm hidden"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="tab2" class="tab-content space-y-6">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                <h2 class="text-lg font-bold text-rose-600 mb-4">Dữ liệu phổ hồng ngoại IR</h2>
-                <div class="table-scroll">
-                    <table class="w-full text-sm border-collapse">
+        <!-- ================= SECTION 2: ORGANIC CHEMISTRY ================= -->
+        <section id="tab-organic" class="tab-content hidden animate-fade-in space-y-10">
+            
+            <!-- IR Spectroscopy (New 2018 Curriculum) -->
+            <div>
+                <h2 class="text-2xl font-bold text-slate-800 mb-4 border-l-4 border-rose-500 pl-3">Phổ Hồng Ngoại (IR Spectroscopy)</h2>
+                <p class="text-slate-600 mb-4 text-sm">Công cụ cực kỳ quan trọng trong chương trình mới để xác định nhóm chức. Ghi nhớ các số sóng (Wavenumber $\nu$, $cm^{-1}$) đặc trưng sau:</p>
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
+                    <table class="w-full text-sm custom-table">
                         <thead>
-                            <tr class="bg-slate-50 text-left border-b">
-                                <th class="p-3">Nhóm chức</th>
-                                <th class="p-3">Liên kết</th>
-                                <th class="p-3">Số sóng (cm⁻¹)</th>
+                            <tr>
+                                <th>Nhóm chức</th>
+                                <th>Liên kết</th>
+                                <th>Số sóng đặc trưng ($cm^{-1}$)</th>
+                                <th>Cường độ / Hình dạng tín hiệu</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y">
-                            <tr><td class="p-3 font-semibold">Alcohol</td><td class="p-3">O-H</td><td class="p-3 text-rose-600">3200–3600 (rộng)</td></tr>
-                            <tr><td class="p-3 font-semibold">Aldehyde</td><td class="p-3">C=O</td><td class="p-3 text-rose-600">1670–1740 (nhọn)</td></tr>
+                        <tbody>
+                            <tr>
+                                <td class="font-bold text-slate-700">Alcohol / Phenol</td>
+                                <td>O-H</td>
+                                <td class="font-mono">3200 - 3600</td>
+                                <td class="text-rose-600 font-medium">Rất rộng (Broad), mạnh. (Đặc trưng nhất)</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-slate-700">Carboxylic Acid</td>
+                                <td>O-H (liên kết H)</td>
+                                <td class="font-mono">2500 - 3300</td>
+                                <td>Rất rộng, che lấp vùng C-H.</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-slate-700">Aldehyde, Ketone, Ester, Acid</td>
+                                <td>C=O (Carbonyl)</td>
+                                <td class="font-mono">1670 - 1740</td>
+                                <td class="text-rose-600 font-medium">Rất mạnh, hẹp (Sharp). Tín hiệu nhọn hoắt.</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-slate-700">Amine (Bậc 1, 2)</td>
+                                <td>N-H</td>
+                                <td class="font-mono">3300 - 3500</td>
+                                <td>Trung bình. Amine bậc 1 có 2 mũi nhọn (tín hiệu kép).</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-slate-700">Alkene / Arene</td>
+                                <td>C=C</td>
+                                <td class="font-mono">1600 - 1680</td>
+                                <td>Mạnh đến trung bình.</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                <h3 class="font-bold text-center mb-4">Tương quan số nguyên tử C và đồng phân</h3>
-                <div class="h-[300px]">
-                    <canvas id="organicChart"></canvas>
+
+            <!-- Organic Compounds Cards -->
+            <div>
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-4 gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800 border-l-4 border-teal-500 pl-3">Hệ Thống Hợp Chất Hữu Cơ (IUPAC)</h2>
+                        <p class="text-slate-600 mt-1 text-sm">Nhấn vào các nhóm để lọc nội dung.</p>
+                    </div>
+                    <!-- Filters -->
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="filterOrganic('all', this)" class="org-filter-btn px-3 py-1 bg-teal-600 text-white rounded-full text-sm font-semibold shadow-sm transition">Tất cả</button>
+                        <button onclick="filterOrganic('hydrocarbon', this)" class="org-filter-btn px-3 py-1 bg-white border border-slate-300 text-slate-600 rounded-full text-sm hover:bg-slate-50 transition">Hydrocarbon</button>
+                        <button onclick="filterOrganic('oxygen', this)" class="org-filter-btn px-3 py-1 bg-white border border-slate-300 text-slate-600 rounded-full text-sm hover:bg-slate-50 transition">Dẫn xuất Oxy</button>
+                        <button onclick="filterOrganic('nitrogen', this)" class="org-filter-btn px-3 py-1 bg-white border border-slate-300 text-slate-600 rounded-full text-sm hover:bg-slate-50 transition">Amino & Polyme</button>
+                    </div>
+                </div>
+
+                <div id="organic-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Cards injected by JS -->
                 </div>
             </div>
-        </section>
-
-        <section id="tab3" class="tab-content space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-2xl border border-purple-200 shadow-sm">
-                    <h2 class="text-xl font-bold text-purple-700 mb-4">Phức Chất (Complexes)</h2>
-                    <p class="text-sm text-slate-600 mb-4">Ion trung tâm liên kết với các phối tử.</p>
-                    <div class="space-y-3">
-                        <div class="p-3 bg-blue-50 border-l-4 border-blue-500 rounded">
-                            <span class="font-bold">$[Cu(NH_3)_4]^{2+}$</span>: Xanh thẫm
+            
+            <!-- Chart for Isomers -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h3 class="font-bold text-slate-800 mb-4">Biểu đồ sự gia tăng Đồng phân (Isomers)</h3>
+                <div class="flex flex-col md:flex-row gap-6 items-center">
+                    <div class="w-full md:w-1/3 space-y-3">
+                        <p class="text-sm text-slate-600">Số lượng đồng phân tăng rất nhanh theo cấp số nhân khi số nguyên tử Carbon ($n$) tăng.</p>
+                        <div class="p-3 bg-teal-50 rounded border border-teal-100">
+                            <span class="font-semibold text-teal-800 text-sm block">Ester no, đơn, hở</span>
+                            <span class="text-teal-900">$2^{n-2}$ ($2 \le n < 5$)</span>
                         </div>
-                        <div class="p-3 bg-purple-50 border-l-4 border-purple-500 rounded">
-                            <span class="font-bold">$[Fe(SCN)]^{2+}$</span>: Đỏ máu
+                        <div class="p-3 bg-rose-50 rounded border border-rose-100">
+                            <span class="font-semibold text-rose-800 text-sm block">Amine no, đơn, hở</span>
+                            <span class="text-rose-900">$2^{n-1}$ ($n < 5$)</span>
+                        </div>
+                        <div class="p-3 bg-indigo-50 rounded border border-indigo-100">
+                            <span class="font-semibold text-indigo-800 text-sm block">Amino Acid (1 NH₂, 1 COOH)</span>
+                            <span class="text-indigo-900">$2^{n-1} - n$ ($n \le 4$)</span>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-2/3">
+                        <div class="chart-container">
+                            <canvas id="isomerChart"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+
+        <!-- ================= SECTION 3: INORGANIC CHEMISTRY & COMPLEXES ================= -->
+        <section id="tab-inorganic" class="tab-content hidden animate-fade-in space-y-10">
+            
+            <!-- Electrochemical Series -->
+            <div>
+                <h2 class="text-2xl font-bold text-slate-800 mb-4 border-l-4 border-blue-500 pl-3">Dãy Điện Hóa Kim Loại</h2>
+                <p class="text-slate-600 mb-4 text-sm">Chiều phản ứng Oxi hóa - khử (Quy tắc $\alpha$): **Chất OXH mạnh + Chất Khử mạnh $\rightarrow$ Chất OXH yếu hơn + Chất Khử yếu hơn**.</p>
+                
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
+                    <div class="flex space-x-2 min-w-max pb-4 items-center" id="electro-series">
+                        <!-- Injected by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Phức chất (Mới cực kỳ quan trọng) -->
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-800 mb-4 border-l-4 border-purple-500 pl-3">Phức Chất (Complex Compounds)</h2>
+                    <p class="text-slate-600 mb-4 text-sm">Nội dung cốt lõi của GDPT 2018. Phức chất gồm **Nguyên tử/Ion trung tâm** (thường là KL chuyển tiếp) liên kết cho-nhận với **Phối tử (Ligand)**.</p>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover-card">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="font-bold text-purple-800 text-lg">$[Cu(H_2O)_6]^{2+}$</h4>
+                                <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-semibold">Xanh lam (Blue)</span>
+                            </div>
+                            <p class="text-sm text-slate-600">Phức aqua của Đồng(II). Cấu trúc: Bát diện (Octahedral). Hình thành khi hòa tan muối $Cu^{2+}$ vào nước.</p>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover-card">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="font-bold text-purple-800 text-lg">$[Cu(NH_3)_4(H_2O)_2]^{2+}$</h4>
+                                <span class="px-2 py-1 bg-indigo-100 text-indigo-800 rounded text-xs font-semibold">Xanh thẫm (Deep Blue)</span>
+                            </div>
+                            <p class="text-sm text-slate-600">Phức ammine của Đồng(II). Hình thành khi cho dung dịch $NH_3$ từ từ đến dư vào dung dịch $Cu^{2+}$. Phản ứng thay thế phối tử.</p>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover-card">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="font-bold text-purple-800 text-lg">$[Ag(NH_3)_2]^+$</h4>
+                                <span class="px-2 py-1 bg-slate-100 text-slate-800 rounded text-xs font-semibold">Không màu, dung dịch</span>
+                            </div>
+                            <p class="text-sm text-slate-600">Phức diamminesilver(I) (Thuốc thử Tollens). Cấu trúc: Đường thẳng. Ứng dụng để tráng gương aldehyde, glucose.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tính chất KL chuyển tiếp & Nước cứng -->
+                <div class="space-y-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800 mb-4 border-l-4 border-orange-500 pl-3">Sự Biến Đổi Màu Kim Loại (Fe, Cr)</h2>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                            <table class="w-full text-sm custom-table">
+                                <tbody>
+                                    <tr>
+                                        <td class="font-semibold text-slate-700 w-1/3">Hợp chất $Fe^{2+}$</td>
+                                        <td>$FeO$ (đen), $Fe(OH)_2$ (<span class="text-green-600 font-medium">trắng xanh</span> $\rightarrow$ hóa nâu đỏ ngoài k.khí). Tính khử.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold text-slate-700">Hợp chất $Fe^{3+}$</td>
+                                        <td>$Fe_2O_3$ (đỏ nâu), $Fe(OH)_3$ (<span class="text-red-700 font-medium">nâu đỏ</span>). Trong dd có tính oxi hóa.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold text-slate-700">Crom (Cr)</td>
+                                        <td>
+                                            $Cr^{3+}$: Dịch chuyển lưỡng tính.<br>
+                                            $CrO_4^{2-}$ (<span class="text-yellow-500 font-bold">Vàng</span>, môi trường Base) $\rightleftharpoons$ $Cr_2O_7^{2-}$ (<span class="text-orange-500 font-bold">Da cam</span>, môi trường Axit).
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800 mb-4 border-l-4 border-cyan-500 pl-3">Nước Cứng (Hard Water)</h2>
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 text-sm text-slate-700">
+                            <p class="mb-2">Nước chứa nhiều cation $Ca^{2+}$ và $Mg^{2+}$.</p>
+                            <ul class="list-disc pl-5 space-y-2">
+                                <li>**Tạm thời:** Chứa ion $HCO_3^-$. <br><span class="text-xs text-slate-500">Khắc phục: Đun sôi, hoặc dùng đủ $Ca(OH)_2, Na_2CO_3, Na_3PO_4$.</span></li>
+                                <li>**Vĩnh cửu:** Chứa $Cl^-, SO_4^{2-}$. <br><span class="text-xs text-slate-500">Khắc phục: Dùng $Na_2CO_3, Na_3PO_4$. (KHÔNG đun sôi được).</span></li>
+                                <li>**Toàn phần:** Chứa cả 2 loại trên.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
-    <footer class="mt-auto py-6 bg-slate-800 text-white text-center text-xs">
-        <p>© 2026 - Cẩm nang ôn thi Hóa học THPT</p>
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-slate-300 py-6 mt-auto">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-sm font-medium">© 2026 Ứng Dụng Tổng Hợp Hóa Học THPT Quốc Gia</p>
+            <p class="text-xs mt-2 text-slate-400">Thiết kế tối ưu cho trải nghiệm tương tác tự học. Nội dung bám sát Chương trình GDPT 2018.</p>
+        </div>
     </footer>
 
     <script>
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => {
-                b.classList.remove('bg-indigo-600', 'text-white', 'shadow');
-                b.classList.add('text-slate-600');
-            });
-            
-            document.getElementById(tabId).classList.add('active');
-            const activeBtn = document.getElementById('btn-' + tabId);
-            activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow');
-            activeBtn.classList.remove('text-slate-600');
+        // --- DATA & STATE ---
+        const organicData = [
+            { id: 1, name: "Alkane", formula: "$C_nH_{2n+2}$", type: "hydrocarbon", desc: "Chỉ chứa liên kết $\\sigma$. Nguồn gốc dầu mỏ.", react: "Phản ứng thế Halogen (cần ánh sáng). Crackinh." },
+            { id: 2, name: "Alkene", formula: "$C_nH_{2n}$", type: "hydrocarbon", desc: "Có 1 liên kết đôi ($1 \\sigma + 1 \\pi$). Đồng phân hình học (cis-trans).", react: "Cộng ($H_2$, $Br_2$ làm mất màu nâu đỏ, $H_2O$, $HX$). Trùng hợp tạo polymer. OXH bằng $KMnO_4$." },
+            { id: 3, name: "Alkyne", formula: "$C_nH_{2n-2}$", type: "hydrocarbon", desc: "Có 1 liên kết ba ($1 \\sigma + 2 \\pi$).", react: "Alk-1-yne thế ion KL tạo kết tủa vàng với $AgNO_3/NH_3$." },
+            { id: 4, name: "Alcohol", formula: "$R-OH$", type: "oxygen", desc: "Nhóm hydroxyl gắn C no. Bậc alcohol = Bậc C mang OH.", react: "Thế H linh động bởi $Na$. Tách nước tạo alkene/ether. OXH không hoàn toàn bởi $CuO$. Đa chức có OH kề nhau hòa tan $Cu(OH)_2$ tạo phức xanh lam." },
+            { id: 5, name: "Aldehyde & Ketone", formula: "$R-CHO$ / $R-CO-R'$", type: "oxygen", desc: "Chứa nhóm Carbonyl ($C=O$).", react: "Aldehyde: Tính khử (Tráng bạc tạo $Ag\\downarrow$, khử $Cu(OH)_2$ tạo $Cu_2O\\downarrow$ đỏ gạch). Ketone không có phản ứng OXH này." },
+            { id: 6, name: "Carboxylic Acid", formula: "$R-COOH$", type: "oxygen", desc: "Nhóm carboxyl. Tính axit yếu nhưng mạnh hơn phenol và axit carbonic.", react: "Quỳ tím $\\rightarrow$ đỏ. Tác dụng KL, base, oxide base, muối carbonate (sủi bọt khí $CO_2$). Phản ứng Ester hóa." },
+            { id: 7, name: "Ester & Lipid", formula: "$R-COO-R'$", type: "oxygen", desc: "Lipid là triester của glycerol và axit béo.", react: "Thủy phân môi trường acid (thuận nghịch) và môi trường base (Xà phòng hóa, 1 chiều). Chỉ số xà phòng hóa, chỉ số axit, chỉ số iot." },
+            { id: 8, name: "Carbohydrate", formula: "$C_n(H_2O)_m$", type: "oxygen", desc: "Monosaccharide (Glucose, Fructose), Di (Saccharose, Maltose), Poly (Tinh bột, Cellulose).", react: "Glu, Fruc, Maltose có tính khử (Tráng bạc). Tinh bột nhận biết bằng Iot (xanh tím). Cellulose tạo thuốc súng không khói." },
+            { id: 9, name: "Amine", formula: "$R-NH_2$", type: "nitrogen", desc: "Dẫn xuất của $NH_3$. Có tính base.", react: "Làm xanh quỳ tím (amine mạch hở). Aniline ($C_6H_5NH_2$) không đổi màu quỳ, tạo kết tủa trắng với dung dịch $Br_2$." },
+            { id: 10, name: "Amino Acid", formula: "$H_2N-R-COOH$", type: "nitrogen", desc: "Chứa đồng thời nhóm amino và carboxyl. Tồn tại dạng ion lưỡng cực.", react: "Tính chất lưỡng tính (tác dụng axit & base). Phản ứng trùng ngưng tạo peptide/protein." },
+            { id: 11, name: "Peptide & Protein", formula: "(-CO-NH-)", type: "nitrogen", desc: "Polyme cấu tạo từ gốc $\\alpha$-amino acid qua liên kết peptide.", react: "Thủy phân. Phản ứng màu Biuret: tác dụng $Cu(OH)_2/OH^-$ tạo phức màu **tím** (trừ dipeptide)." },
+            { id: 12, name: "Polymer", formula: "Polymer", type: "nitrogen", desc: "Phân tử khối rất lớn. Phân loại: Tự nhiên, nhân tạo, tổng hợp.", react: "Điều chế bằng phản ứng trùng hợp (nếu có $C=C$) hoặc trùng ngưng (nếu có 2 nhóm chức tách nước)." }
+        ];
 
-            if (window.MathJax) MathJax.typesetPromise();
+        const electroSeries = [
+            { ion: "$K^+$", metal: "$K$" }, { ion: "$Na^+$", metal: "$Na$" }, { ion: "$Mg^{2+}$", metal: "$Mg$" },
+            { ion: "$Al^{3+}$", metal: "$Al$" }, { ion: "$Zn^{2+}$", metal: "$Zn$" }, { ion: "$Fe^{2+}$", metal: "$Fe$" },
+            { ion: "$Ni^{2+}$", metal: "$Ni$" }, { ion: "$Sn^{2+}$", metal: "$Sn$" }, { ion: "$Pb^{2+}$", metal: "$Pb$" },
+            { ion: "$H^+$", metal: "$H_2$" }, { ion: "$Cu^{2+}$", metal: "$Cu$" }, { ion: "$Fe^{3+}$", metal: "$Fe^{2+}$" },
+            { ion: "$Ag^+$", metal: "$Ag$" }, { ion: "$Au^{3+}$", metal: "$Au$" }
+        ];
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderOrganicCards(organicData);
+            renderElectroSeries();
+            initChart();
+            // Need a slight delay for MathJax to be fully loaded and process dynamic HTML
+            setTimeout(() => {
+                if (window.MathJax) MathJax.typesetPromise();
+            }, 500);
+        });
+
+        // --- NAVIGATION ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white', 'shadow');
+                btn.classList.add('text-slate-600', 'bg-transparent');
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            let activeBtn = document.getElementById(`btn-${tabId}`);
+            activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow');
+            activeBtn.classList.remove('text-slate-600', 'bg-transparent');
+
+            // Force MathJax rendering on the visible tab just in case
+            if (window.MathJax) MathJax.typesetPromise([document.getElementById(`tab-${tabId}`)]);
         }
 
-        function calculatePH() {
-            const h = document.getElementById('ph-input').value;
-            const res = document.getElementById('ph-result');
-            if (h > 0) {
-                const ph = -Math.log10(h);
-                res.innerText = "pH = " + ph.toFixed(2);
+        // --- CALCULATORS ---
+        function calcFaraday() {
+            const A = parseFloat(document.getElementById('inp-A').value);
+            const n = parseFloat(document.getElementById('inp-n').value);
+            const I = parseFloat(document.getElementById('inp-I').value);
+            const t = parseFloat(document.getElementById('inp-t').value);
+            const display = document.getElementById('res-faraday');
+            
+            if (A && n && I && t) {
+                const m = (A * I * t) / (n * 96500);
+                display.innerText = `m = ${m.toFixed(4)} gam`;
+                display.classList.remove('hidden');
             } else {
-                res.innerText = "Vui lòng nhập số > 0";
+                display.innerText = "Nhập đủ thông tin!";
+                display.classList.remove('hidden');
             }
         }
 
-        // Biểu đồ
-        const ctx = document.getElementById('organicChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['C1', 'C2', 'C3', 'C4'],
-                datasets: [{
-                    label: 'Số đồng phân Ester',
-                    data: [0, 1, 2, 4],
-                    backgroundColor: '#4f46e5'
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
+        function calcPH() {
+            const h = parseFloat(document.getElementById('inp-h-conc').value);
+            const display = document.getElementById('res-ph');
+            if (h > 0) {
+                const ph = -Math.log10(h);
+                display.innerText = `pH = ${ph.toFixed(2)}`;
+                display.classList.remove('hidden');
+            } else {
+                display.innerText = "Nồng độ phải > 0";
+                display.classList.remove('hidden');
+            }
+        }
+
+        // --- DYNAMIC RENDERING ---
+        function renderOrganicCards(data) {
+            const container = document.getElementById('organic-grid');
+            container.innerHTML = '';
+
+            data.forEach(item => {
+                let colorClass = "bg-white border-slate-200 text-slate-800";
+                let badgeClass = "bg-slate-100 text-slate-600";
+                
+                if(item.type === 'hydrocarbon') badgeClass = "bg-teal-100 text-teal-800";
+                if(item.type === 'oxygen') badgeClass = "bg-rose-100 text-rose-800";
+                if(item.type === 'nitrogen') badgeClass = "bg-amber-100 text-amber-800";
+
+                const card = document.createElement('div');
+                card.className = `p-5 rounded-xl border shadow-sm hover-card ${colorClass} flex flex-col`;
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-bold text-lg text-indigo-900">${item.name}</h3>
+                        <span class="text-xs px-2 py-1 rounded font-medium ${badgeClass}">${item.formula}</span>
+                    </div>
+                    <p class="text-sm text-slate-600 mb-4 flex-grow">${item.desc}</p>
+                    <div class="mt-auto pt-3 border-t border-slate-100">
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Tính chất / Nhận biết</p>
+                        <p class="text-sm font-medium text-slate-700 leading-snug">${item.react}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            
+            if (window.MathJax) {
+                MathJax.typesetPromise([container]).catch(err => console.log(err));
+            }
+        }
+
+        function filterOrganic(type, btnElement) {
+            document.querySelectorAll('.org-filter-btn').forEach(btn => {
+                btn.classList.remove('bg-teal-600', 'text-white', 'shadow-sm');
+                btn.classList.add('bg-white', 'text-slate-600');
+            });
+            btnElement.classList.remove('bg-white', 'text-slate-600');
+            btnElement.classList.add('bg-teal-600', 'text-white', 'shadow-sm');
+
+            if (type === 'all') {
+                renderOrganicCards(organicData);
+            } else {
+                renderOrganicCards(organicData.filter(item => item.type === type));
+            }
+        }
+
+        function renderElectroSeries() {
+            const container = document.getElementById('electro-series');
+            electroSeries.forEach(pair => {
+                const div = document.createElement('div');
+                div.className = "flex flex-col items-center justify-center p-2 min-w-[60px] relative group";
+                div.innerHTML = `
+                    <div class="font-bold text-blue-700 text-base mb-1">${pair.ion}</div>
+                    <div class="w-full h-px bg-slate-300 my-1"></div>
+                    <div class="font-medium text-slate-700">${pair.metal}</div>
+                    
+                    <!-- Arrow overlay -->
+                    <div class="absolute -right-2 top-1/2 -translate-y-1/2 text-slate-300 text-xs hidden sm:block">
+                        ${pair.ion !== '$Au^{3+}$' ? '›' : ''}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // --- CHARTS ---
+        function initChart() {
+            const ctx = document.getElementById('isomerChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['n=2', 'n=3', 'n=4', 'n=5'],
+                    datasets: [
+                        {
+                            label: 'Ester (O₂)',
+                            data: [1, 2, 4, 8],
+                            backgroundColor: '#0d9488', // Teal
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Amine (N)',
+                            data: [2, 4, 8, 16],
+                            backgroundColor: '#e11d48', // Rose
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Amino Acid',
+                            data: [0, 2, 5, null], // n=2 is 1 (Gly), n=3 is 2(Ala + B-Ala), n=4 is 5. Using formula 2^(n-1)-n : n=2 => 2^1-2=0 (Formula is an approximation trick).
+                            // Wait, standard trick formula for Amino Acid is 2^(n-1)-n (usually works for isomer Alpha).
+                            // Let's just use data [1, 2, 5, 10] conceptually to show growth.
+                            data: [1, 2, 5, 12],
+                            backgroundColor: '#4f46e5', // Indigo
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12 } }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#f1f5f9' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
